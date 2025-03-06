@@ -1257,16 +1257,16 @@ endif
 ifneq "$(KERNELVERSION)" "4.19.190"
 include/config/auto.conf: FORCE
 endif
-ifneq "$(CC_VERSION_TEXT)" "gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0"
+ifneq "$(CC_VERSION_TEXT)" "loongarch64-linux-gnu-gcc (LoongArch GNU toolchain rc1.6 (20241115)) 8.3.0"
 include/config/auto.conf: FORCE
 endif
 ifneq "$(srctree)" "."
 include/config/auto.conf: FORCE
 endif
-ifneq "$(CC)" "gcc"
+ifneq "$(CC)" "loongarch64-linux-gnu-gcc"
 include/config/auto.conf: FORCE
 endif
-ifneq "$(LD)" "ld"
+ifneq "$(LD)" "loongarch64-linux-gnu-ld"
 include/config/auto.conf: FORCE
 endif
 ifneq "$(SRCARCH)" "loongarch"

@@ -1,32 +1,55 @@
-# Prerequisites
+# 编译生成的文件和目录
+*.o
+*.ko
+*.mod.c
+*.symvers
+*.order
+*.dtb
+.vmlinux*
+initrd.img
+System.map
+modules.order
+Module.symvers
+.tmp_versions/
+*.cmd
 *.d
 
-# Compiled Object files
-*.slo
-*.lo
-*.o
-*.obj
+# 内核配置文件
+.config
+.config.old
 
-# Precompiled Headers
-*.gch
-*.pch
+# 日志文件
+*.log
 
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
+# 临时文件和备份文件
+*~
+*.bak
 
-# Fortran module files
-*.mod
-*.smod
+# 调试信息文件
+*.debug
 
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
+# 文档生成的文件
+Documentation/output/
 
-# Executables
-*.exe
-*.out
-*.app
+# 工具生成的文件
+scripts/kconfig/.tmp*
+scripts/kconfig/conf.o
+scripts/kconfig/zconf.tab.c
+scripts/kconfig/zconf.tab.h
+scripts/kconfig/zconf.lex.c
+scripts/kconfig/zconf.hash.c
+
+# 交叉编译相关的临时文件
+arch/*/boot/compressed/
+arch/*/boot/dts/
+
+# 自动生成的头文件
+include/generated/
+include/config/
+
+# 内核模块签名文件
+*.sign
+
+# 编辑器产生的文件
+.idea/
+.vscode/

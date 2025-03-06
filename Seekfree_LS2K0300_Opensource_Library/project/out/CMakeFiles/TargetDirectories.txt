@@ -1,0 +1,3 @@
+/home/xiaom/loongson_2k0300/loong_2k0300_project/Seekfree_LS2K0300_Opensource_Library/project/out/CMakeFiles/SEEKFREE_APP.dir
+/home/xiaom/loongson_2k0300/loong_2k0300_project/Seekfree_LS2K0300_Opensource_Library/project/out/CMakeFiles/edit_cache.dir
+/home/xiaom/loongson_2k0300/loong_2k0300_project/Seekfree_LS2K0300_Opensource_Library/project/out/CMakeFiles/rebuild_cache.dir

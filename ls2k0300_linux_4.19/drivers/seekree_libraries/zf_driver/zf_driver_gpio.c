@@ -72,8 +72,7 @@ static ssize_t zf_driver_gpio_write(struct file *filp, const char __user *buf, s
     // 字符转数字
     dev->out = dev->out - 0x30;
 
-    dev_info(dev->misc.parent, "dev->out = %d\n", dev->out);
-
+    // dev_info(dev->misc.parent, "dev->out = %d\n", dev->out);
 
     // 检查输入数据是否合法
     if (dev->out == GPIO_LOW || dev->out == GPIO_HIGH) 

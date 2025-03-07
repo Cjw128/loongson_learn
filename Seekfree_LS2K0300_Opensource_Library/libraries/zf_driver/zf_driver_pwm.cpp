@@ -36,5 +36,5 @@
 
 void pwm_set_duty(const char *path, uint16 duty)
 {
-    file_write_uint16(path, duty);
+    file_write_dat(path, duty);
 }

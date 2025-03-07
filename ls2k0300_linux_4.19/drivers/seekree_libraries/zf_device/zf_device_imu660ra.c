@@ -268,7 +268,10 @@ uint8 imu660ra_init(struct imu660ra_dev_struct *dev)
             // 如果程序在输出了断言信息 并且提示出错位置在这里
             // 那么就是 IMU660RA 自检出错并超时退出了
             // 检查一下接线有没有问题 如果没问题可能就是坏了
-			printk(KERN_WARNING "imu660ra self check error.\r\n");
+			dev_err(&dev->spi->dev, "imu660ra self check error.\r\n");
+            dev_err(&dev->spi->dev, "imu660ra self check error.\r\n");
+            dev_err(&dev->spi->dev, "imu660ra self check error.\r\n");
+
             return_state = 1;
             break;
         }
@@ -284,7 +287,10 @@ uint8 imu660ra_init(struct imu660ra_dev_struct *dev)
             // 如果程序在输出了断言信息 并且提示出错位置在这里
             // 那么就是 IMU660RA 配置初始化文件出错了
             // 检查一下接线有没有问题 如果没问题可能就是坏了
-            printk(KERN_ERR "imu660ra init error.");
+            dev_err(&dev->spi->dev, "imu660ra init error.");
+            dev_err(&dev->spi->dev, "imu660ra init error.");
+            dev_err(&dev->spi->dev, "imu660ra init error.");
+
             return_state = 1;
             break;
         }
@@ -301,7 +307,10 @@ uint8 imu660ra_init(struct imu660ra_dev_struct *dev)
         {
             default:
             {
-                printk(KERN_ERR "IMU660RA_ACC_SAMPLE_DEFAULT set error.");
+                dev_err(&dev->spi->dev, "IMU660RA_ACC_SAMPLE_DEFAULT set error.");
+                dev_err(&dev->spi->dev, "IMU660RA_ACC_SAMPLE_DEFAULT set error.");
+                dev_err(&dev->spi->dev, "IMU660RA_ACC_SAMPLE_DEFAULT set error.");
+
                 return_state = 1;
             }break;
             case IMU660RA_ACC_SAMPLE_SGN_2G:
@@ -340,7 +349,7 @@ uint8 imu660ra_init(struct imu660ra_dev_struct *dev)
         {
             default:
             {
-                printk(KERN_ERR "IMU660RA_GYRO_SAMPLE_DEFAULT set error.");
+                dev_err(&dev->spi->dev, "IMU660RA_GYRO_SAMPLE_DEFAULT set error.");
                 return_state = 1;
             }break;
             case IMU660RA_GYRO_SAMPLE_SGN_125DPS:
@@ -431,7 +440,7 @@ static int imu660ra_probe(struct spi_device *spi)
     struct iio_dev *indio_dev;
 
     // 打印调试信息，表明进入驱动初始化流程
-    printk("imu660ra_probe\r\n");
+    dev_info(&dev->spi->dev,"imu660ra_probe\r\n");
 
     // 1、申请 iio_dev 内存
     indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*dev));

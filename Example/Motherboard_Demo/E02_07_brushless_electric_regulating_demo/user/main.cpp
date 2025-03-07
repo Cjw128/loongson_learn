@@ -33,16 +33,48 @@
 
 #include "zf_common_headfile.h"
 
-// 控制频率为50HZ,需要与设备树设定的值一致
-#define FREQ            (50)   
+struct pwm_info pwm_1_info;
+struct pwm_info pwm_2_info;
 
 #define PWM_1           "/dev/zf_device_pwm_esc_1"
 #define PWM_2           "/dev/zf_device_pwm_esc_2"
 
 uint16 duty = 0;
 
+void sigint_handler(int signum) 
+{
+    printf("收到Ctrl+C，程序即将退出\n");
+    exit(0);
+}
+
+void cleanup()
+{
+    printf("程序异常退出，执行清理操作\n");
+    // 关闭电机
+    pwm_set_duty(PWM_1, 0);   
+    pwm_set_duty(PWM_2, 0);    
+}
+
 int main(int, char**) 
 {
+
+    // 注册清理函数
+    atexit(cleanup);
+
+    // 注册SIGINT信号的处理函数
+    signal(SIGINT, sigint_handler);
+
+    // 获取PWM设备信息
+    pwm_get_dev_info(PWM_1, &pwm_1_info);
+    pwm_get_dev_info(PWM_2, &pwm_2_info);
+
+    // 打印PWM频率和duty最大值
+    printf("pwm 1 freq = %d Hz\r\n", pwm_1_info.freq);
+    printf("pwm 1 duty_max = %d\r\n", pwm_1_info.duty_max);
+
+    printf("pwm 2 freq = %d Hz\r\n", pwm_2_info.freq);
+    printf("pwm 2 duty_max = %d\r\n", pwm_2_info.duty_max);
+
 
     while(1)
     {

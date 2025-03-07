@@ -25,9 +25,13 @@ fi
 echo "cmake 命令执行成功。"
 make -j12
 
-
+echo "生成APP"
 # cmake --build .
 
-# scp -O SEEKFREE_APP root@192.168.2.57:/home/root/
-# echo "传输"
+# 获取上级目录的名称
+parent_dir_name=$(basename $(dirname $(pwd)))
 
+# 使用获取到的上级目录名称进行 scp 操作
+scp -O $parent_dir_name root@192.168.2.57:/home/root/
+
+echo "传输完成"

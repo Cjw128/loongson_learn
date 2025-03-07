@@ -37,6 +37,19 @@
 
 #include "zf_common_typedef.h"
 
+// PWM数据结构体，用于存储PWM相关的参数信息
+// 包含频率、占空比、占空比最大值、高电平时间、周期时间、时钟频率等参数
+struct pwm_info
+{
+    uint32 freq;       // PWM频率
+    uint32 duty;       // PWM占空比
+    uint32 duty_max;   // PWM占空比最大值
+    uint32 duty_ns;    // PWM高电平时间（纳秒）
+    uint32 period_ns;  // PWM周期时间（纳秒）
+    uint32 clk_freq;   // 时钟频率
+};
+
+void pwm_get_dev_info(const char *path, struct pwm_info *pwm_info);
 void pwm_set_duty(const char *path, uint16 duty);
 
 #endif

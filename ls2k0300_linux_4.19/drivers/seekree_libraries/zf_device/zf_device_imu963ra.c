@@ -325,7 +325,7 @@ static uint8 imu963ra_acc_gyro_self_check (struct imu963ra_dev_struct *dev)
         }
         dat = imu963ra_read_acc_gyro_register(IMU963RA_WHO_AM_I);
 
-        dev_info(&dev->spi->dev, "imu963ra_acc_gyro error dat = %d\r\n", dat);  
+        dev_info(&dev->spi->dev, "imu963ra_acc_gyro self dat = %d\r\n", dat);  
 
         mdelay(10);
     }
@@ -354,7 +354,7 @@ static uint8 imu963ra_mag_self_check (struct imu963ra_dev_struct *dev)
         }
         dat = imu963ra_read_mag_register(IMU963RA_MAG_ADDR, IMU963RA_MAG_CHIP_ID);
 
-        dev_info(&dev->spi->dev, "imu963ra_mag_self error dat = %d\r\n", dat);  
+        dev_info(&dev->spi->dev, "imu963ra_mag self dat = %d\r\n", dat);  
 
         mdelay(10);
     }
@@ -381,7 +381,9 @@ uint8 imu963ra_init(struct imu963ra_dev_struct *dev)
         imu963ra_write_acc_gyro_register(IMU963RA_FUNC_CFG_ACCESS, 0x00);       // 关闭HUB寄存器访问
         if(imu963ra_acc_gyro_self_check(dev))                   
         {                   
-            dev_warn(&dev->spi->dev, "IMU963RA acc and gyro self check error.");                    
+            dev_err(&dev->spi->dev, "IMU963RA acc and gyro self check error.");       
+            dev_err(&dev->spi->dev, "IMU963RA acc and gyro self check error.");     
+            dev_err(&dev->spi->dev, "IMU963RA acc and gyro self check error.");              
             return_state = 1;
             break;            
         }                   
@@ -437,7 +439,10 @@ uint8 imu963ra_init(struct imu963ra_dev_struct *dev)
         {
             default:
             {
-                dev_warn(&dev->spi->dev, "IMU963RA_GYRO_SAMPLE_DEFAULT set error.");
+                dev_err(&dev->spi->dev, "IMU963RA_GYRO_SAMPLE_DEFAULT set error.");
+                dev_err(&dev->spi->dev, "IMU963RA_GYRO_SAMPLE_DEFAULT set error.");
+                dev_err(&dev->spi->dev, "IMU963RA_GYRO_SAMPLE_DEFAULT set error.");
+
                 return_state = 1;
             }break;
             case IMU963RA_GYRO_SAMPLE_SGN_125DPS:
@@ -496,7 +501,10 @@ uint8 imu963ra_init(struct imu963ra_dev_struct *dev)
 
         if(imu963ra_mag_self_check(dev))
         {
-            dev_warn(&dev->spi->dev, "IMU963RA mag self check error.");
+            dev_err(&dev->spi->dev, "IMU963RA mag self check error.");
+            dev_err(&dev->spi->dev, "IMU963RA mag self check error.");
+            dev_err(&dev->spi->dev, "IMU963RA mag self check error.");
+
             return_state = 1;
             break;            
         }
@@ -508,7 +516,10 @@ uint8 imu963ra_init(struct imu963ra_dev_struct *dev)
         {
             default:
             {
-                dev_warn(&dev->spi->dev, "IMU963RA_MAG_SAMPLE_DEFAULT set error.");
+                dev_err(&dev->spi->dev, "IMU963RA_MAG_SAMPLE_DEFAULT set error.");
+                dev_err(&dev->spi->dev, "IMU963RA_MAG_SAMPLE_DEFAULT set error.");
+                dev_err(&dev->spi->dev, "IMU963RA_MAG_SAMPLE_DEFAULT set error.");
+                
                 return_state = 1;
             }break;
             case IMU963RA_MAG_SAMPLE_2G:

@@ -124,13 +124,12 @@ static ssize_t zf_driver_pwm_read(struct file *filp, char __user *buf, size_t cn
     struct zf_driver_pwm_struct *dev = filp->private_data;
     int ret;
 
-
     // 将数据从内核空间复制到用户空间
-    ret = copy_to_user(buf, &dev->ctl, sizeof(dev->ctl));
+    ret = copy_to_user(buf, (uint8_t *)&dev->ctl, sizeof(dev->ctl));
     if (ret) 
     {
         dev_err(dev->misc.parent, "Failed to copy data to user space: %d bytes failed\n", ret);
-        return -EFAULT;
+        return ret;
     }
     
     return 0;

@@ -9,7 +9,7 @@
 #define UVC_FPS     60
 
 int8 uvc_camera_init(const char *path);
-void wait_image_refresh();
+int8 wait_image_refresh();
 
 
 extern uint8_t *rgay_image;

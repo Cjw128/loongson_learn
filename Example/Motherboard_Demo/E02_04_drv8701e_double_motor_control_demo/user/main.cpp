@@ -40,6 +40,9 @@
 #define MOTOR2_PWM   "/dev/zf_device_pwm_motor_2"
 
 
+struct pwm_info servo_pwm_info;
+
+
 int8 duty = 0;
 bool dir = true;
 
@@ -47,8 +50,28 @@ bool dir = true;
 
 #define MAX_DUTY        (30 )           // 最大 MAX_DUTY% 占空比
 
+void sigint_handler(int signum) 
+{
+    printf("收到Ctrl+C，程序即将退出\n");
+    exit(0);
+}
+
+void cleanup()
+{
+    printf("程序异常退出，执行清理操作\n");
+    // 关闭电机
+    pwm_set_duty(MOTOR1_PWM, 0);   
+    pwm_set_duty(MOTOR2_PWM, 0);    
+}
+
 int main(int, char**) 
 {
+
+    // 注册清理函数
+    atexit(cleanup);
+
+    // 注册SIGINT信号的处理函数
+    signal(SIGINT, sigint_handler);
 
     while(1)
     {

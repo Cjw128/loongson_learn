@@ -38,7 +38,7 @@ int16 encoder_get_count(const char *path)
 {
     int16 dat;
 
-    file_read_int16(path, &dat);
+    file_read_dat(path, &dat);
 
     return dat;
 }

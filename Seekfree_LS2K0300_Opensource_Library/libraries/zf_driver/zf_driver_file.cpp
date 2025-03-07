@@ -1,6 +1,6 @@
 #include "zf_driver_file.h"
 
-int8 file_write_uint8(const char *path, uint8 value)
+int8 file_write_dat(const char *path, uint8 value)
 {
     int fd;
 
@@ -23,7 +23,7 @@ int8 file_write_uint8(const char *path, uint8 value)
 }
 
 
-int8 file_write_uint16(const char *path, uint16 value)
+int8 file_write_dat(const char *path, uint16 value)
 {
     int fd;
 
@@ -45,7 +45,7 @@ int8 file_write_uint16(const char *path, uint16 value)
     return 0;
 }
 
-int8 file_write_uint32(const char *path, uint32 value)
+int8 file_write_dat(const char *path, uint32 value)
 {
     int fd;
 
@@ -70,7 +70,7 @@ int8 file_write_uint32(const char *path, uint32 value)
 
 
 
-int8 file_read_int8(const char *path, int8 *ret_value)
+int8 file_read_dat(const char *path, int8 *ret_value)
 {
     int fd; 
 
@@ -97,7 +97,7 @@ int8 file_read_int8(const char *path, int8 *ret_value)
 }
 
 
-int8 file_read_uint8(const char *path, uint8 *ret_value)
+int8 file_read_dat(const char *path, uint8 *ret_value)
 {
     int fd; 
 
@@ -122,7 +122,7 @@ int8 file_read_uint8(const char *path, uint8 *ret_value)
     return 0;
 }
 
-int8 file_read_int16(const char *path, int16 *ret_value)
+int8 file_read_dat(const char *path, int16 *ret_value)
 {
     int fd; 
 

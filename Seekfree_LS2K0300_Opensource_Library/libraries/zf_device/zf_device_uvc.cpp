@@ -45,17 +45,32 @@ int8 uvc_camera_init(const char *path)
 }
 
 
-void wait_image_refresh()
+int8 wait_image_refresh()
 {
-    // 阻塞式等待图像刷新
-    cap >> frame_rgb;
-    // cap.read(frame_rgb);
+    try 
+    {
+        // 阻塞式等待图像刷新
+        cap >> frame_rgb;
+        // cap.read(frame_rgb);
+        if (frame_rgb.empty()) 
+        {
+            std::cerr << "未获取到有效图像帧" << std::endl;
+            return -1;
+        }
+    } 
+    catch (const cv::Exception& e) 
+    {
+        std::cerr << "OpenCV 异常: " << e.what() << std::endl;
+        return -1;
+    }
 
     // rgb转灰度
     cv::cvtColor(frame_rgb, frame_rgay, cv::COLOR_BGR2GRAY);
 
     // cv对象转指针
     rgay_image = reinterpret_cast<uint8_t *>(frame_rgay.ptr(0));
+
+    return 0;
 }
 
 

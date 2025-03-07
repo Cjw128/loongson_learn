@@ -34,6 +34,15 @@
 #include "zf_driver_pwm.h"
 #include "zf_driver_file.h"
 
+
+
+
+void pwm_get_dev_info(const char *path, struct pwm_info *pwm_info)
+{
+    file_read_dat(path, pwm_info);
+}
+
+
 void pwm_set_duty(const char *path, uint16 duty)
 {
     file_write_dat(path, duty);

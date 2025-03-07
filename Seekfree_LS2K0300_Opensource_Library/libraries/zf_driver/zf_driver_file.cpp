@@ -1,153 +1,47 @@
 #include "zf_driver_file.h"
 
-int8 file_write_dat(const char *path, uint8 value)
-{
-    int fd;
+#include <stdio.h>
+#include <stdlib.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <stdint.h>
+#include <string.h>
 
-    if (0 > (fd = open(path, O_WRONLY)))
-    {
-        printf("%s open error\r\n", path);
+
+// 辅助函数：执行文件读写操作
+int file_io_operation(const char *path, int flags, uint8 *buf, size_t size) 
+{
+    if (path == NULL || buf == NULL) {
+        fprintf(stderr, "Invalid input parameters\n");
         return -1;
     }
 
-    if (write(fd, &value, sizeof(value)) < 0) 
-    {
-        printf("%s write error\r\n", path);
+    int fd = open(path, flags);
+    if (fd == -1) {
+        perror("Failed to open file");
+        return -1;
+    }
+
+    ssize_t result;
+    if (flags & O_WRONLY) {
+        result = write(fd, buf, size);
+    } else {
+        result = read(fd, buf, size);
+    }
+
+    if (result == -1) {
+        perror("File read/write error");
         close(fd);
         return -1;
     }
-    
-    close(fd); //关闭文件
+
+    if (close(fd) == -1) {
+        perror("Failed to close file");
+        return -1;
+    }
 
     return 0;
 }
-
-
-int8 file_write_dat(const char *path, uint16 value)
-{
-    int fd;
-
-    if (0 > (fd = open(path, O_WRONLY)))
-    {
-        printf("%s open error\r\n", path);
-        return -1;
-    }
-
-    if (write(fd, &value, sizeof(value)) < 0) 
-    {
-        printf("%s write error\r\n", path);
-        close(fd);
-        return -1;
-    }
-    
-    close(fd); //关闭文件
-
-    return 0;
-}
-
-int8 file_write_dat(const char *path, uint32 value)
-{
-    int fd;
-
-    if (0 > (fd = open(path, O_WRONLY)))
-    {
-        printf("%s open error\r\n", path);
-        return -1;
-    }
-
-    if (write(fd, &value, sizeof(value)) < 0) 
-    {
-        printf("%s write error\r\n", path);
-        close(fd);
-        return -1;
-    }
-    
-    close(fd); //关闭文件
-
-    return 0;
-}
-
-
-
-
-int8 file_read_dat(const char *path, int8 *ret_value)
-{
-    int fd; 
-
-    int8 value;
-
-    fd = open(path, O_RDWR);
-    if (0 > fd)
-    {
-        printf("%s open error\r\n", path);
-        return -1;
-    }
-
-    if(read(fd, &value, sizeof(value)) < 0)
-    {
-        printf("value error\r\n");
-        return -1;
-    }
-
-    *ret_value = value;
-
-    close(fd); //关闭文件
-
-    return 0;
-}
-
-
-int8 file_read_dat(const char *path, uint8 *ret_value)
-{
-    int fd; 
-
-    uint8 value;
-    fd = open(path, O_RDWR);
-    if (0 > fd)
-    {
-        printf("%s open error\r\n", path);
-        return -1;
-    }
-
-    if(read(fd, &value, sizeof(value)) < 0)
-    {
-        printf("value error\r\n");
-        return -1;
-    }
-
-    *ret_value = value;
-
-    close(fd); //关闭文件
-
-    return 0;
-}
-
-int8 file_read_dat(const char *path, int16 *ret_value)
-{
-    int fd; 
-
-    int16 value;
-
-    fd = open(path, O_RDWR);
-    if (0 > fd)
-    {
-        printf("%s open error\r\n", path);
-        return -1;
-    }
-
-    if(read(fd, &value, sizeof(value)) < 0)
-    {
-        printf("value error\r\n");
-        return -1;
-    }
-
-    *ret_value = value;
-
-    close(fd); //关闭文件
-
-    return 0;
-}
-
 
 int8 file_read_string(const char *path, char *str)
 {
@@ -174,3 +68,4 @@ int8 file_read_string(const char *path, char *str)
 	fclose(fp);		
 	return 0;
 }
+

@@ -3,8 +3,9 @@
 
 void gpio_set_level(const char *path, uint8 dat)
 {
-    file_write_dat(path, dat + 0x30);
+    dat = dat + 0x30;
 
+    file_write_dat(path, dat);
 }
 
 

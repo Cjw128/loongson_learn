@@ -119,11 +119,29 @@ static ssize_t zf_driver_pwm_write(struct file *filp, const char __user *buf, si
     return 0;
 }
 
+static ssize_t zf_driver_pwm_read(struct file *filp, char __user *buf, size_t cnt, loff_t *off)
+{
+    struct zf_driver_pwm_struct *dev = filp->private_data;
+    int ret;
+
+
+    // 将数据从内核空间复制到用户空间
+    ret = copy_to_user(buf, &dev->ctl, sizeof(dev->ctl));
+    if (ret) 
+    {
+        dev_err(dev->misc.parent, "Failed to copy data to user space: %d bytes failed\n", ret);
+        return -EFAULT;
+    }
+    
+    return 0;
+}
+
 // 设备操作函数，定义了设备的文件操作接口，这里只实现了写操作
 static struct file_operations zf_driver_pwm_fops = 
 {
     .owner = THIS_MODULE,
     .write = zf_driver_pwm_write,
+    .read = zf_driver_pwm_read,
 };
 
 //-------------------------------------------------------------------------------------------------------------------

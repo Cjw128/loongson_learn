@@ -829,7 +829,7 @@
 #define CONFIG_XFS_FS 1
 #define CONFIG_LOCKDEP_SUPPORT 1
 #define CONFIG_NR_CPUS_DEFAULT_4 1
-#define CONFIG_BUILTIN_DTB_NAME "smart_loongson_2k0300_pai_99"
+#define CONFIG_BUILTIN_DTB_NAME "seekfree_smart_car_pai_99"
 #define CONFIG_ACPI_PROCESSOR_IDLE 1
 #define CONFIG_NO_HZ 1
 #define CONFIG_POSIX_MQUEUE 1

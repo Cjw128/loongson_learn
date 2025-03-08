@@ -268,7 +268,7 @@
     clock-frequency = <100000000>;                  // 10ns计数一次, 100MHZ的采样频率
     compatible = "seekfree,encoder";
     encoder-dir-gpio = <&gpa3 3 GPIO_ACTIVE_HIGH>;  // GPIO051
-    dev-name = "zf_encoder_left";
+    dev-name = "zf_encoder_1";
 };
 
 // PWM1 GPIO65 
@@ -305,7 +305,7 @@
     reg = <0 0x1611b030 0 0x10>;
     compatible = "seekfree,encoder";
     encoder-dir-gpio = <&gpa3 2 GPIO_ACTIVE_HIGH>;  // GPIO050
-    dev-name = "zf_encoder_right";
+    dev-name = "zf_encoder_2";
 };
 
 // 舵机PWM

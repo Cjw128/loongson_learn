@@ -88,26 +88,10 @@
 		#size-cells = <0>;
 		num-chipselects = <1>;
 
-		// icm20602: icm20602@0 {
-        //     status = "okay";
-        //     gpio-controller;
-		//     compatible = "seekfree,icm20602";
-        //     spi-max-frequency = <2000000>;
-		// 	reg = <0>;
-		// };
-        
-        // imu660ra: imu660ra@0 {
-        //     status = "okay";
-        //     gpio-controller;
-		//     compatible = "seekfree,imu660ra";
-        //     spi-max-frequency = <10000000>;
-		// 	reg = <0>;
-		// };
-
-        imu963ra: imu963ra@0 {
+        imu: imu@0 {
             status = "okay";
             gpio-controller;
-		    compatible = "seekfree,imu963ra";
+		    compatible = "seekfree,imu";
             spi-max-frequency = <10000000>;
 			reg = <0>;
 		};

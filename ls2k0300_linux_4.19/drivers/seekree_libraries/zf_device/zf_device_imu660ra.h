@@ -3,6 +3,7 @@
 
 #include "../zf_common/zf_common_typedef.h"
 
+#include "zf_device_imu_core.h"
 typedef enum
 {
     IMU660RA_ACC_SAMPLE_SGN_2G ,                                                // 加速度计量程 ±2G  (ACC = Accelerometer 加速度计) (SGN = signum 带符号数 表示正负范围) (G = g 重力加速度 g≈9.80 m/s^2)
@@ -23,7 +24,6 @@ typedef enum
 #define IMU660RA_ACC_SAMPLE_DEFAULT     ( IMU660RA_ACC_SAMPLE_SGN_8G )          // 在这设置默认的 加速度计 初始化量程
 #define IMU660RA_GYRO_SAMPLE_DEFAULT    ( IMU660RA_GYRO_SAMPLE_SGN_2000DPS )    // 在这设置默认的 陀螺仪   初始化量程
 
-#define IMU660RA_TIMEOUT_COUNT      ( 0x00FF )                                  // IMU660RA 超时计数
 
 //================================================定义 IMU660RA 内部地址================================================
 #define IMU660RA_DEV_ADDR           ( 0x69 )                                    // SA0接地：0x68 SA0上拉：0x69 模块默认上拉
@@ -43,5 +43,10 @@ typedef enum
 #define IMU660RA_GYR_CONF           ( 0x42 )
 #define IMU660RA_GYR_RANGE          ( 0x43 )
 //================================================定义 IMU660RA 内部地址================================================
+
+
+uint8 imu660ra_init (struct imu_dev_struct *dev);
+int16 imu660ra_get_acc (struct imu_dev_struct *dev, int axis);
+int16 imu660ra_get_gyro (struct imu_dev_struct *dev, int axis);
 
 #endif

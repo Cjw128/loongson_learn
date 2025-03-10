@@ -1,10 +1,7 @@
 # SPDX-License-Identifier: GPL-2.0
 
-obj-$(CONFIG_ZF_DEVICE_IMU660RA) += zf_device_imu660ra.o
-zf_device_imu660ra-objs := zf_device/zf_device_imu660ra.o  zf_device/zf_device_config.o
-
-obj-$(CONFIG_ZF_DEVICE_IMU963RA) += zf_device_imu963ra.o
-zf_device_imu963ra-objs := zf_device/zf_device_imu963ra.o
+obj-$(CONFIG_ZF_DEVICE_IMU) += zf_device_imu.o
+zf_device_imu-objs := zf_device/zf_device_imu_core.o zf_device/zf_device_imu660ra.o zf_device/zf_device_config.o zf_device/zf_device_imu963ra.o
 
 obj-$(CONFIG_ZF_DRIVER_ATIM) += zf_driver_atim.o
 zf_driver_atim-objs := zf_driver/zf_driver_atim.o

@@ -6,24 +6,13 @@ menuconfig SEEKFREE_KERNEL_DRIVER
 
 if SEEKFREE_KERNEL_DRIVER
 
-config ZF_DEVICE_IMU660RA
-	tristate "zf_device_imu660ra support"
+config ZF_DEVICE_IMU
+	tristate "zf_device_imu660ra & zf_device_imu660rb & zf_device_imu963ra support"
 	depends on CPU_LOONGSON3 || CPU_LOONGSON2K || CPU_LOONGSON64
 	
 	help
-	  Turn this option on and support the IMU660RA, 
-	  which has a three-axis accelerometer and a three-axis gyroscope. 
-	  Currently, an analog SPI is used, initialized as an IIO device.
-
-config ZF_DEVICE_IMU963RA
-	tristate "zf_device_imu963ra support"
-	depends on CPU_LOONGSON3 || CPU_LOONGSON2K || CPU_LOONGSON64
-
-	help
-	  Turn on this option to support the IMU963RA, 
-	  which has a three-axis accelerometer and 
-	  a three-axis gyroscope and a three-axis magnetometer. 
-	  Currently, an analog SPI is used, initialized as an IIO device.
+	  Automatically detect IMU660RA, IMU660RB and IMU963R modules, 
+	  and initialize the IIO devices.
 
 config ZF_DRIVER_ATIM 
 	tristate "zf_driver_atim support"

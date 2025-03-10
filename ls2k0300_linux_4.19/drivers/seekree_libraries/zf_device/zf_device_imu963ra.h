@@ -4,6 +4,7 @@
 #include "../zf_common/zf_common_typedef.h"
 
 
+#include "zf_device_imu_core.h"
 
 typedef enum
 {
@@ -33,8 +34,7 @@ typedef enum
 #define IMU963RA_GYRO_SAMPLE_DEFAULT    ( IMU963RA_GYRO_SAMPLE_SGN_2000DPS )    // 在这设置默认的 陀螺仪   初始化量程
 #define IMU963RA_MAG_SAMPLE_DEFAULT     ( IMU963RA_MAG_SAMPLE_8G )              // 在这设置默认的 磁力计   初始化量程
 
-#define IMU963RA_TIMEOUT_COUNT                      ( 0x00FF )                  // IMU963RA 超时计数
-
+#define MAG_TIME_OUT                    (10)
 //================================================定义 IMU963RA 内部地址================================================
 #define IMU963RA_DEV_ADDR                           ( 0x6B )                    // SA0接地：0x6A SA0上拉：0x6B 模块默认上拉
 #define IMU963RA_SPI_W                              ( 0x00 )
@@ -164,5 +164,10 @@ typedef enum
 #define IMU963RA_MAG_FBR                            ( 0x0B )
 #define IMU963RA_MAG_CHIP_ID                        ( 0x0D )
 //================================================定义 IMU963RA 内部地址================================================
+uint8 imu963ra_init (struct imu_dev_struct *dev);
+int16 imu963ra_get_acc (struct imu_dev_struct *dev, int axis);
+int16 imu963ra_get_gyro (struct imu_dev_struct *dev, int axis);
+int16 imu963ra_get_mag (struct imu_dev_struct *dev, int axis);
+
 
 #endif

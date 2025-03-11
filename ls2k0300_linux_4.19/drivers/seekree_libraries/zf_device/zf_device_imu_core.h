@@ -2,7 +2,7 @@
 #define _zf_device_imu_core_h_
 
 #include "../zf_common/zf_common_typedef.h"
-
+#include <linux/spinlock.h>
 
 struct imu_dev_struct 
 {
@@ -16,7 +16,8 @@ struct imu_dev_struct
 	struct spi_device *spi;				// spi设备
 	struct regmap *regmap;				// 寄存器访问接口
 	struct regmap_config reg_cfg;		// 寄存器访问接口
-    struct mutex lock;
+    // struct mutex lock;
+	spinlock_t read_raw_lock;
 };
 
 typedef enum

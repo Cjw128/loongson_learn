@@ -55,7 +55,8 @@ struct ls_pwm_atim_chip
 	
 	u32 en_mark;
 	u64	clock_frequency;
-	struct mutex lock;
+	// struct mutex lock;
+	spinlock_t write_duty_lock;
 };
 
 
@@ -168,6 +169,7 @@ static int ls_pwm_atim_config(struct pwm_chip *chip, struct pwm_device *pwm,
 	unsigned int arr_reg, ccr_reg;
 	unsigned long long val0, val1;
 	int temp_arr_reg = 0;
+	unsigned long flags;
 
 	// printk("period_ns = %d\r\n", period_ns);
 	// printk("duty_ns = %d\r\n", duty_ns);
@@ -203,7 +205,9 @@ static int ls_pwm_atim_config(struct pwm_chip *chip, struct pwm_device *pwm,
 	ccr_reg = val1;// < 1 ? 1 : val1;
 
 	// 上锁，防止多通道读写异常
-	mutex_lock(&ls_pwm->lock);
+	// mutex_lock(&ls_pwm->lock);
+	spin_lock_irqsave(&ls_pwm->write_duty_lock, flags);
+
 	// 需要更新arr寄存器
 	temp_arr_reg = readl(ls_pwm->mmio_base + ATIM_ARR);
 	if(temp_arr_reg != arr_reg)
@@ -214,7 +218,8 @@ static int ls_pwm_atim_config(struct pwm_chip *chip, struct pwm_device *pwm,
 
 	// 这是通道计数器
 	writel(ccr_reg, ls_pwm->mmio_base + (ATIM_CCR1 + (pwm->hwpwm) / 2 * 4));
-	mutex_unlock(&ls_pwm->lock);
+	// mutex_unlock(&ls_pwm->lock);
+	spin_unlock_irqrestore(&ls_pwm->write_duty_lock, flags);
 
 	return 0;
 }
@@ -319,7 +324,8 @@ static int ls_pwm_atim_probe(struct platform_device *pdev)
 	writel(0, pwm->mmio_base + ATIM_CCMR2);
 	
 	// 初始化互斥锁，用于保护对设备的并发访问
-	mutex_init(&pwm->lock);
+	// mutex_init(&pwm->lock);
+	spin_lock_init(&pwm->write_duty_lock);
 	
 	dev_dbg(&pdev->dev, "pwm probe successful\n");
 	return 0;

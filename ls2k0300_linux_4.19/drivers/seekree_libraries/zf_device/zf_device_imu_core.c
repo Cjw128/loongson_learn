@@ -201,12 +201,13 @@ static int imu_read_raw(struct iio_dev *indio_dev, struct iio_chan_spec const *c
 {
 	struct imu_dev_struct *dev = iio_priv(indio_dev);
 	int ret = 0;
+	unsigned long flags;
 
 	switch (mask) 
     {
         case IIO_CHAN_INFO_RAW:
-
-            mutex_lock(&dev->lock);
+		// 由于规则通道组只有一个通道，所以这里需要用锁来限定一段时间只能读取一个通道的值。
+            spin_lock_irqsave(&dev->read_raw_lock, flags);
             switch (chan->type) 
             {
                 case IIO_ACCEL:		// 加速度计原始数据
@@ -222,7 +223,7 @@ static int imu_read_raw(struct iio_dev *indio_dev, struct iio_chan_spec const *c
                     ret = -EINVAL;
                     break;
             }
-            mutex_unlock(&dev->lock);
+            spin_unlock_irqrestore(&dev->read_raw_lock, flags);
 
             break;
         default:
@@ -374,8 +375,8 @@ static int imu_probe(struct spi_device *spi)
     dev->spi = spi;
     // 将 indio_dev 设置为 spi->dev 的 driver_data，方便后续通过 spi 设备获取 iio_dev
     spi_set_drvdata(spi, indio_dev);
-    // 初始化互斥锁，用于保护对设备的并发访问
-    mutex_init(&dev->lock);
+    // 初始化自旋锁，用于保护对设备的并发访问
+    spin_lock_init(&dev->read_raw_lock);
 
     // 初始化 regmap_config 设置
     setup_regmap_config(dev);
@@ -411,7 +412,7 @@ static int imu_probe(struct spi_device *spi)
         return -EPERM;
     }
 
-    // 设置设备的读取函数
+    // 设置设备的读取函数ccc
     setup_imu_read_functions(dev);
 
     // 3、设置 iio_dev 的其他成员变量

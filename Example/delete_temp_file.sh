@@ -8,7 +8,8 @@ delete_out_dir_content() {
         # 检查目录是否存在
         if [ -d "$out_dir" ]; then
             # 删除目录下的所有内容（包括子目录及其内容）
-            rm -rf "$out_dir"/*
+            # rm -rf "$out_dir"/*
+            find "$out_dir" -mindepth 1 ! -name "本文件夹作用.txt" -exec rm -rf {} +
             echo "已删除 $out_dir 目录下的所有内容。"
         fi
     done

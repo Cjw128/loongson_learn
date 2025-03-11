@@ -34,7 +34,7 @@ extern const char *imu_file_path[];
 extern uint8 imu_type;
 
 
-void imu_init();
+void imu_get_dev_info();
 int16 imu_get_raw(const char *path);
 
 

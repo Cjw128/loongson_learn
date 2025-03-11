@@ -26,7 +26,7 @@ const char *imu_file_path[] =
 };
 
 
-void imu_init()
+void imu_get_dev_info()
 {
 	char str[20] = {0};
 	if (file_read_string(imu_name_path, str) < 0)

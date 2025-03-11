@@ -44,7 +44,7 @@ void pit_callback()
 int main(int, char**) 
 {
 
-    imu_init();
+    imu_get_dev_info();
     if(DEV_IMU660RA == imu_type)
     {
         printf("IMU DEV IS IMU660RA\r\n");

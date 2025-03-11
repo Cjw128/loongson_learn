@@ -5,6 +5,14 @@
 #include "zf_common_typedef.h"
 
 
+enum imu_dev_enum
+{
+    DEV_NO_FIND  = 0x00,
+    DEV_IMU660RA = 0x10,
+    DEV_IMU660RB = 0x11,
+    DEV_IMU963RA = 0x12,
+};
+
 enum path_index 
 {
 	ACC_X_RAW,
@@ -20,8 +28,14 @@ enum path_index
 	MAG_Z_RAW,
 };
 
-extern const char *imu_file_path[];
 
+
+extern const char *imu_file_path[];
+extern uint8 imu_type;
+
+
+void imu_get_dev_info();
 int16 imu_get_raw(const char *path);
+
 
 #endif

@@ -44,6 +44,25 @@ void pit_callback()
 int main(int, char**) 
 {
 
+    imu_init();
+    if(DEV_IMU660RA == imu_type)
+    {
+        printf("IMU DEV IS IMU660RA\r\n");
+    }
+    else if(DEV_IMU660RB == imu_type)
+    {
+        printf("IMU DEV IS IMU660RB\r\n");
+    }
+    else if(DEV_IMU963RA == imu_type)
+    {
+        printf("IMU DEV IS IMU963RA\r\n");
+    }
+    else
+    {
+        printf("NO FIND IMU DEV\r\n");
+        return -1;
+    }
+    
     // 创建一个定时器10ms周期，回调函数为pit_callback
     pit_ms_init(10, pit_callback);
 

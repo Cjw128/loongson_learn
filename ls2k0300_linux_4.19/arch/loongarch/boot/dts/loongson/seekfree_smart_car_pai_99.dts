@@ -56,7 +56,7 @@
 	};
     // ----------拨码开关---------- //
 
-    // ----------电机方向引脚----------//
+    // ----------电机方向引脚---------- //
     // 电机2方向引脚
     // DIR1->GPIO72
     // PWM1->GPIO65
@@ -75,10 +75,10 @@
         compatible = "seekfree,gpio_out";
         gpios = <&gpa4 9 GPIO_ACTIVE_HIGH>;
 	};
-    // ----------电机方向引脚----------//
+    // ----------电机方向引脚---------- //
 
 
-    // ----------姿态传感器----------//
+    // ----------姿态传感器---------- //
     spi3 {
         status = "okay";
         compatible = "spi-gpio";
@@ -101,26 +101,26 @@
 		};
 
 	};
-    // ----------姿态传感器----------//
+    // ----------姿态传感器---------- //
 
-    // ----------舵机PWM----------//
+    // ----------舵机PWM---------- //
     zf_device_pwm_servo{
         compatible = "seekfree,pwm";
         pwms = <&pwm_atim 5 1000000>;   // pwm_atim 通道5 周期(用户不需要关心) (0-6 一共7个通道)
         status = "okay";
-        freq = <100>;                   // 300HZ 频率
-        duty = <0>;                     // 10% 的占空比
+        freq = <300>;                   // 300HZ 频率
+        duty = <0>;                     // 默认 0% 的占空比
         duty_max = <10000>;             // duty最大值，不建议修改。
     };
-    // ----------舵机PWM----------//
+    // ----------舵机PWM---------- //
 
-    // ----------电调PWM----------//
+    // ----------电调PWM---------- //
     zf_device_pwm_esc_1{
         compatible = "seekfree,pwm";
         pwms = <&pwm_gtim 1 1000000>;   // pwm_atim 通道6 周期(用户不需要关心)
         status = "okay";
-        freq = <50>;                    // 100HZ 频率
-        duty = <0>;                     // 0% 的占空比
+        freq = <50>;                    // 50HZ 频率
+        duty = <0>;                     // 默认 0% 的占空比
         duty_max = <10000>;             // duty最大值，不建议修改。
     };
 
@@ -128,19 +128,19 @@
         compatible = "seekfree,pwm";
         pwms = <&pwm_gtim 2 1000000>;   // pwm_atim 通道6 周期(用户不需要关心)
         status = "okay";
-        freq = <50>;                    // 100HZ 频率
-        duty = <0>;                     // 0% 的占空比
+        freq = <50>;                    // 50HZ 频率
+        duty = <0>;                     // 默认 0% 的占空比
         duty_max = <10000>;             // duty最大值，不建议修改。
     };
-    // ----------电调PWM----------//
+    // ----------电调PWM---------- //
 
-    // ----------电机PWM----------//
+    // ----------电机PWM---------- //
     zf_device_pwm_motor_1{
         compatible = "seekfree,pwm";
         pwms = <&pwm1 0 1000000>;       // pwm_atim 通道6 周期(用户不需要关心)
         status = "okay";
         freq = <17000>;                 // 17KHZ 频率
-        duty = <0>;                     // 0% 的占空比
+        duty = <0>;                     // 默认 0% 的占空比
         duty_max = <10000>;             // duty最大值，不建议修改。
     };
 
@@ -149,10 +149,10 @@
         pwms = <&pwm2 0 1000000>;       // pwm_atim 通道6 周期(用户不需要关心)
         status = "okay";
         freq = <17000>;                 // 17KHZ 频率
-        duty = <0>;                     // 0% 的占空比
+        duty = <0>;                     // 默认 0% 的占空比
         duty_max = <10000>;             // duty最大值，不建议修改。
     };
-    // ----------电机PWM----------//    
+    // ----------电机PWM---------- //    
 };
 
 
@@ -224,7 +224,9 @@
     };
 };
 
-// 屏幕
+// ----------IPS200屏幕---------- //
+// 目前只支持IPS200的SPI屏幕。
+// 不支持其他屏幕。
 &spi1{
     status = "okay";
     pinctrl-names = "default";
@@ -233,28 +235,29 @@
     st7789v:st7789v@0{
         status = "okay";
         compatible = "sitronix,st7789v";
-        reg = <0>;       //chip select 0:cs0  1:cs1
+        reg = <0>;              //chip select 0:cs0  1:cs1
 
         spi-max-frequency =<50000000>;
         spi-cpol;
         spi-cpha;
         rgb;
-        rotate = <0>;       //0 90 180 270
+        rotate = <0>;           // 旋转方向 0 90 180 270
         buswidth = <8>;
-        fps = <30>;
+        fps = <30>;             // 帧率
         
         dc-gpios = <&gpa1 10 GPIO_ACTIVE_HIGH>;      // GPIO26
         reset-gpios = <&gpa4 10 GPIO_ACTIVE_HIGH>;   // GPIO74
 
 
-        width = <240>;      // 如果是ips114则填135
-        height= <320>;      // 如果是ips114则填240
+        width = <240>;     
+        height= <320>;      
 
         debug = <0x0>;
     };
 };
+// ----------IPS200屏幕---------- //
 
-// ----------带方向编码器配置----------//
+// ----------带方向编码器配置---------- //
 // 编码器1
 // PWM0 GPIO64
 &pwm0{
@@ -280,9 +283,9 @@
     encoder-dir-gpio = <&gpa3 2 GPIO_ACTIVE_HIGH>;  // GPIO050
     dev-name = "zf_encoder_2";
 };
-// ----------带方向编码器配置----------//
+// ----------带方向编码器配置---------- //
 
-// ----------电机PWM配置----------//
+// ----------电机PWM配置---------- //
 // PWM1 GPIO65 
 // PWM GPIO065  pwm[1]
 // DIR GPIO073
@@ -306,10 +309,10 @@
     clock-frequency = <100000000>;
     compatible = "loongson,ls300-pwm";
 };
-// ----------电机PWM配置----------//
+// ----------电机PWM配置---------- //
 
 
-// ----------舵机PWM配置----------//
+// ----------舵机PWM配置---------- //
 //GPIO86 pwmchip2
 &pwm_atim{
     status = "okay";
@@ -319,9 +322,9 @@
     pinctrl-names = "default";
     pinctrl-0 = <&atim_ch3n_pin_m1>;   
 };
-// ----------舵机PWM配置----------//
+// ----------舵机PWM配置---------- //
 
-// ----------电调PWM配置----------//
+// ----------电调PWM配置---------- //
 //GPIO88 GPIO89 pwmchip6
 &pwm_gtim{
     status = "okay";
@@ -333,6 +336,8 @@
 };
 // ----------电调PWM配置----------//
 
-&adc {
+// ----------ADC配置----------//
+&adc{
 	status = "okay";
 };
+// ----------ADC配置----------//

@@ -40,15 +40,20 @@
 #define MOTOR2_PWM   "/dev/zf_device_pwm_motor_2"
 
 
-struct pwm_info servo_pwm_info;
+struct pwm_info motor_1_pwm_info;
+struct pwm_info motor_2_pwm_info;
+
 
 
 int8 duty = 0;
 bool dir = true;
 
-#define PWM_DUTY_MAX    (10000)         // 在设备树中，设置的10000。如果要修改，需要与设备树对应。
+// 在设备树中，设置的10000。如果要修改，需要与设备树对应。
+#define MOTOR1_PWM_DUTY_MAX    (motor_1_pwm_info.duty_max)       
+// 在设备树中，设置的10000。如果要修改，需要与设备树对应。 
+#define MOTOR2_PWM_DUTY_MAX    (motor_2_pwm_info.duty_max)        
 
-#define MAX_DUTY        (30 )           // 最大 MAX_DUTY% 占空比
+#define MAX_DUTY        (30 )   // 最大 MAX_DUTY% 占空比
 
 void sigint_handler(int signum) 
 {
@@ -66,6 +71,9 @@ void cleanup()
 
 int main(int, char**) 
 {
+    // 获取PWM设备信息
+    pwm_get_dev_info(MOTOR1_PWM, &motor_1_pwm_info);
+    pwm_get_dev_info(MOTOR2_PWM, &motor_2_pwm_info);
 
     // 注册清理函数
     atexit(cleanup);
@@ -75,21 +83,21 @@ int main(int, char**)
 
     while(1)
     {
-        if(duty >= 0)                                                   // 正转
+        if(duty >= 0)                                                           // 正转
         {
-            gpio_set_level(MOTOR1_DIR, 1);                              // DIR输出高电平
-            pwm_set_duty(MOTOR1_PWM, duty * (PWM_DUTY_MAX / 100));      // 计算占空比
+            gpio_set_level(MOTOR1_DIR, 1);                                      // DIR输出高电平
+            pwm_set_duty(MOTOR1_PWM, duty * (MOTOR1_PWM_DUTY_MAX / 100));       // 计算占空比
 
-            gpio_set_level(MOTOR2_DIR, 1);                              // DIR输出高电平
-            pwm_set_duty(MOTOR2_PWM, duty * (PWM_DUTY_MAX / 100));      // 计算占空比
+            gpio_set_level(MOTOR2_DIR, 1);                                      // DIR输出高电平
+            pwm_set_duty(MOTOR2_PWM, duty * (MOTOR2_PWM_DUTY_MAX / 100));       // 计算占空比
         }
         else
         {
-            gpio_set_level(MOTOR1_DIR, 0);                              // DIR输出低电平
-            pwm_set_duty(MOTOR1_PWM, -duty * (PWM_DUTY_MAX / 100));     // 计算占空比
+            gpio_set_level(MOTOR1_DIR, 0);                                      // DIR输出低电平
+            pwm_set_duty(MOTOR1_PWM, -duty * (MOTOR1_PWM_DUTY_MAX / 100));      // 计算占空比
 
-            gpio_set_level(MOTOR2_DIR, 0);                              // DIR输出低电平
-            pwm_set_duty(MOTOR2_PWM, -duty * (PWM_DUTY_MAX / 100));     // 计算占空比
+            gpio_set_level(MOTOR2_DIR, 0);                                      // DIR输出低电平
+            pwm_set_duty(MOTOR2_PWM, -duty * (MOTOR2_PWM_DUTY_MAX / 100));      // 计算占空比
 
         }
 

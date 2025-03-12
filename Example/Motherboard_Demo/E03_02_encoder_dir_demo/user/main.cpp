@@ -37,8 +37,8 @@
 int16 encoder_left;
 int16 encoder_right;
 
-#define ENCODER_1           "/dev/zf_encoder_left"
-#define ENCODER_2           "/dev/zf_encoder_right"
+#define ENCODER_1           "/dev/zf_encoder_1"
+#define ENCODER_2           "/dev/zf_encoder_2"
 void pit_callback()
 {
     encoder_left  = encoder_get_count(ENCODER_1);

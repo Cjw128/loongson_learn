@@ -8,7 +8,7 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-rm -rf *
+find . -mindepth 1 ! -name "本文件夹作用.txt" -exec rm -rf {} +
 # 检查 cd 命令是否执行成功
 if [ $? -ne 0 ]; then
     echo "无法进入 ./project/out 目录，请检查目录是否存在。"

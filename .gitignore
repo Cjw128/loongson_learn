@@ -1,6 +1,5 @@
 # 编译生成的文件和目录
 *.o
-*.ko
 *.mod.c
 *.symvers
 *.order

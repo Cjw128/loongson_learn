@@ -8,14 +8,15 @@
              0 0x90000000 0 0x10000000>;
     };
 
-    // 蜂鸣器
+    // ----------蜂鸣器---------- //
     zf_driver_gpio_beep{
         status = "okay";
         compatible = "seekfree,gpio_out";
         gpios = <&gpa0 12 GPIO_ACTIVE_HIGH>;
 	};
+    // ----------蜂鸣器---------- //
 
-    // 按键
+    // ----------按键---------- //
     zf_driver_gpio_key_0{
         status = "okay";
         compatible = "seekfree,gpio_in";
@@ -39,8 +40,9 @@
         compatible = "seekfree,gpio_in";
         gpios = <&gpa1 0 GPIO_ACTIVE_HIGH>;
 	};
+    // ----------按键---------- //
 
-    // 拨码开关
+    // ----------拨码开关---------- //
     zf_driver_gpio_switch_0{
         status = "okay";
         compatible = "seekfree,gpio_in";
@@ -52,9 +54,11 @@
         compatible = "seekfree,gpio_in";
         gpios = <&gpa1 5 GPIO_ACTIVE_HIGH>;
 	};
+    // ----------拨码开关---------- //
 
-    // 电机1方向引脚
-    // DIR->GPIO72
+    // ----------电机方向引脚----------//
+    // 电机2方向引脚
+    // DIR1->GPIO72
     // PWM1->GPIO65
     zf_driver_gpio_motor_1{
         status = "okay";
@@ -71,10 +75,10 @@
         compatible = "seekfree,gpio_out";
         gpios = <&gpa4 9 GPIO_ACTIVE_HIGH>;
 	};
+    // ----------电机方向引脚----------//
 
 
-
-    // 六轴
+    // ----------姿态传感器----------//
     spi3 {
         status = "okay";
         compatible = "spi-gpio";
@@ -91,13 +95,15 @@
         imu: imu@0 {
             status = "okay";
             gpio-controller;
-		    compatible = "seekfree,imu";
+		    compatible = "seekfree,imu";    // 自动识别IMU660RA IMU660RB IMU963RA
             spi-max-frequency = <10000000>;
 			reg = <0>;
 		};
 
 	};
+    // ----------姿态传感器----------//
 
+    // ----------舵机PWM----------//
     zf_device_pwm_servo{
         compatible = "seekfree,pwm";
         pwms = <&pwm_atim 5 1000000>;   // pwm_atim 通道5 周期(用户不需要关心) (0-6 一共7个通道)
@@ -106,12 +112,14 @@
         duty = <0>;                     // 10% 的占空比
         duty_max = <10000>;             // duty最大值，不建议修改。
     };
+    // ----------舵机PWM----------//
 
+    // ----------电调PWM----------//
     zf_device_pwm_esc_1{
         compatible = "seekfree,pwm";
         pwms = <&pwm_gtim 1 1000000>;   // pwm_atim 通道6 周期(用户不需要关心)
         status = "okay";
-        freq = <50>;                   // 100HZ 频率
+        freq = <50>;                    // 100HZ 频率
         duty = <0>;                     // 0% 的占空比
         duty_max = <10000>;             // duty最大值，不建议修改。
     };
@@ -120,14 +128,16 @@
         compatible = "seekfree,pwm";
         pwms = <&pwm_gtim 2 1000000>;   // pwm_atim 通道6 周期(用户不需要关心)
         status = "okay";
-        freq = <50>;                   // 100HZ 频率
+        freq = <50>;                    // 100HZ 频率
         duty = <0>;                     // 0% 的占空比
         duty_max = <10000>;             // duty最大值，不建议修改。
     };
+    // ----------电调PWM----------//
 
+    // ----------电机PWM----------//
     zf_device_pwm_motor_1{
         compatible = "seekfree,pwm";
-        pwms = <&pwm1 0 1000000>;   // pwm_atim 通道6 周期(用户不需要关心)
+        pwms = <&pwm1 0 1000000>;       // pwm_atim 通道6 周期(用户不需要关心)
         status = "okay";
         freq = <17000>;                 // 17KHZ 频率
         duty = <0>;                     // 0% 的占空比
@@ -136,12 +146,13 @@
 
     zf_device_pwm_motor_2{
         compatible = "seekfree,pwm";
-        pwms = <&pwm2 0 1000000>;   // pwm_atim 通道6 周期(用户不需要关心)
+        pwms = <&pwm2 0 1000000>;       // pwm_atim 通道6 周期(用户不需要关心)
         status = "okay";
         freq = <17000>;                 // 17KHZ 频率
         duty = <0>;                     // 0% 的占空比
         duty_max = <10000>;             // duty最大值，不建议修改。
     };
+    // ----------电机PWM----------//    
 };
 
 
@@ -243,8 +254,9 @@
     };
 };
 
-// PWM0 GPIO64
+// ----------带方向编码器配置----------//
 // 编码器1
+// PWM0 GPIO64
 &pwm0{
     status = "okay";
     pinctrl-names = "default";
@@ -255,6 +267,22 @@
     dev-name = "zf_encoder_1";
 };
 
+
+// 编码器2
+// PWM3 GPIO67
+&pwm3{
+    status = "okay";
+    pinctrl-names = "default";
+    pinctrl-0 = <&pwm3_mux_m0>;
+    clock-frequency = <100000000>;                  // 10ns计数一次, 100MHZ的采样频率
+    reg = <0 0x1611b030 0 0x10>;
+    compatible = "seekfree,encoder";
+    encoder-dir-gpio = <&gpa3 2 GPIO_ACTIVE_HIGH>;  // GPIO050
+    dev-name = "zf_encoder_2";
+};
+// ----------带方向编码器配置----------//
+
+// ----------电机PWM配置----------//
 // PWM1 GPIO65 
 // PWM GPIO065  pwm[1]
 // DIR GPIO073
@@ -278,37 +306,32 @@
     clock-frequency = <100000000>;
     compatible = "loongson,ls300-pwm";
 };
+// ----------电机PWM配置----------//
 
-// PWM3 GPIO67
-// 编码器2
-&pwm3{
-    status = "okay";
-    pinctrl-names = "default";
-    pinctrl-0 = <&pwm3_mux_m0>;
-    clock-frequency = <100000000>;                  // 10ns计数一次, 100MHZ的采样频率
-    reg = <0 0x1611b030 0 0x10>;
-    compatible = "seekfree,encoder";
-    encoder-dir-gpio = <&gpa3 2 GPIO_ACTIVE_HIGH>;  // GPIO050
-    dev-name = "zf_encoder_2";
-};
 
-// 舵机PWM
+// ----------舵机PWM配置----------//
 //GPIO86 pwmchip2
 &pwm_atim{
     status = "okay";
+    compatible = "loongson,ls300-pwm-atim";
     label = "pwm_atim";
+
     pinctrl-names = "default";
     pinctrl-0 = <&atim_ch3n_pin_m1>;   
 };
+// ----------舵机PWM配置----------//
 
-// 电调PWM
+// ----------电调PWM配置----------//
 //GPIO88 GPIO89 pwmchip6
 &pwm_gtim{
     status = "okay";
+    compatible = "loongson,ls300-pwm-gtim";
     label = "pwm_gtim";
+
     pinctrl-names = "default";
     pinctrl-0 = <&gtim_ch2_pin_m1>, <&gtim_ch3_pin_m1>;  
 };
+// ----------电调PWM配置----------//
 
 &adc {
 	status = "okay";

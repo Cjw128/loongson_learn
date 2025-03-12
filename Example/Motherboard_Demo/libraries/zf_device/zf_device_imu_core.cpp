@@ -3,6 +3,11 @@
 
 uint8 imu_type = DEV_NO_FIND;
 
+
+int16 imu_acc_x,  imu_acc_y,  imu_acc_z;
+int16 imu_gyro_x, imu_gyro_y, imu_gyro_z;
+int16 imu_mag_x,  imu_mag_y,  imu_mag_z;
+
 // iio框架获取设备名
 const char imu_name_path[] = 
 {

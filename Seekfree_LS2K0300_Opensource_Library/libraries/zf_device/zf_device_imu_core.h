@@ -29,6 +29,9 @@ enum path_index
 };
 
 
+extern int16 imu_acc_x,  imu_acc_y,  imu_acc_z;
+extern int16 imu_gyro_x, imu_gyro_y, imu_gyro_z;
+extern int16 imu_mag_x,  imu_mag_y,  imu_mag_z;
 
 extern const char *imu_file_path[];
 extern uint8 imu_type;

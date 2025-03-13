@@ -114,7 +114,7 @@ static struct file_operations encoder_dir_fops =
 };
 
 /*
- * @description		: flatform驱动的probe函数，当驱动与
+ * @description		: platform驱动的probe函数，当驱动与
  * 					  设备匹配以后此函数就会执行
  * @param - dev 	: platform设备
  * @return 			: 0，成功;其他负值,失败

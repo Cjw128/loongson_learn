@@ -291,7 +291,6 @@
 // DIR GPIO073
 &pwm1{
     status = "okay";
-    label = "pwm1";
     pinctrl-names = "default";
     pinctrl-0 = <&pwm1_mux_m0>;
     clock-frequency = <100000000>;
@@ -303,7 +302,6 @@
 // DIR GPIO072
 &pwm2{
     status = "okay";
-    label = "pwm2";
     pinctrl-names = "default";
     pinctrl-0 = <&pwm2_mux_m0>;
     clock-frequency = <100000000>;
@@ -317,8 +315,6 @@
 &pwm_atim{
     status = "okay";
     compatible = "loongson,ls300-pwm-atim";
-    label = "pwm_atim";
-
     pinctrl-names = "default";
     pinctrl-0 = <&atim_ch3n_pin_m1>;   
 };
@@ -329,8 +325,6 @@
 &pwm_gtim{
     status = "okay";
     compatible = "loongson,ls300-pwm-gtim";
-    label = "pwm_gtim";
-
     pinctrl-names = "default";
     pinctrl-0 = <&gtim_ch2_pin_m1>, <&gtim_ch3_pin_m1>;  
 };

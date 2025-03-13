@@ -50,7 +50,7 @@ int main(int, char**)
 {
 
     // 创建一个定时器10ms周期，回调函数为pit_callback
-    pit_ms_init(5, pit_callback);
+    pit_ms_init(10, pit_callback);
  
     while(1)
     {

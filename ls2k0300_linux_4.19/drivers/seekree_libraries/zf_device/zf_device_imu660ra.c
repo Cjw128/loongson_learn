@@ -195,7 +195,7 @@ uint8 imu660ra_init(struct imu_dev_struct *dev)
             // 如果程序在输出了断言信息 并且提示出错位置在这里
             // 那么就是 IMU660RA 配置初始化文件出错了
             // 检查一下接线有没有问题 如果没问题可能就是坏了
-            printk(KERN_ERR "imu660ra init error.");
+            // printk(KERN_ERR "imu660ra init error.");
             ret = DEV_NO_FIND;
             break;
         }

@@ -36,16 +36,22 @@ message(STATUS "OpenCV_LIBS: ${OpenCV_LIBS}")
 # 包含项目的自定义库路径
 include_directories(../user)
 include_directories(../code)
+include_directories(../../libraries/zf_components)
 include_directories(../../libraries/zf_common)
 include_directories(../../libraries/zf_device)
 include_directories(../../libraries/zf_driver)
+include_directories(../../libraries/zf_components)
+
 
 # 从目录下查找C/C++文件
 aux_source_directory(../user DIR_SRCS)
 aux_source_directory(../code DIR_SRCS)
+aux_source_directory(../../libraries/zf_components DIR_SRCS)
 aux_source_directory(../../libraries/zf_common DIR_SRCS)
 aux_source_directory(../../libraries/zf_device DIR_SRCS)
 aux_source_directory(../../libraries/zf_driver DIR_SRCS)
+aux_source_directory(../../libraries/zf_components DIR_SRCS)
+
 
 # 创建可执行文件，使用项目名称作为目标名称
 add_executable(${PROJECT_NAME} ${DIR_SRCS})

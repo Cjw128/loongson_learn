@@ -407,7 +407,11 @@ static int imu_probe(struct spi_device *spi)
     // 自动判断是 imu660ra、imu660rb、imu963ra
     ret = detect_imu_device(dev, IMU_TIMEOUT_COUNT);
     if (ret == DEV_NO_FIND) {
-        dev_err(&spi->dev, "no find seekfree imu device\n");
+        
+        dev_err(&spi->dev, "error : no find seekfree imu device.\n");
+        dev_err(&spi->dev, "error : no find seekfree imu device.\n");
+        dev_err(&spi->dev, "error : no find seekfree imu device.\n");
+
         regmap_exit(dev->regmap);
         return -EPERM;
     }

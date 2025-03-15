@@ -58,22 +58,22 @@
 
     // ----------电机方向引脚---------- //
     // 电机2方向引脚
-    // DIR1->GPIO72
+    // DIR1->GPIO73
     // PWM1->GPIO65
     zf_driver_gpio_motor_1{
         status = "okay";
         compatible = "seekfree,gpio_out";
-        gpios = <&gpa4 8 GPIO_ACTIVE_HIGH>;
+        gpios = <&gpa4 89 GPIO_ACTIVE_HIGH>;
 	};
 
 
     // 电机2方向引脚
-    // DIR->GPIO73
-    // PWM2->GPIO65
+    // DIR->GPIO72
+    // PWM2->GPIO66
     zf_driver_gpio_motor_2{
         status = "okay";
         compatible = "seekfree,gpio_out";
-        gpios = <&gpa4 9 GPIO_ACTIVE_HIGH>;
+        gpios = <&gpa4 8 GPIO_ACTIVE_HIGH>;
 	};
     // ----------电机方向引脚---------- //
 
@@ -117,7 +117,7 @@
     // ----------电调PWM---------- //
     zf_device_pwm_esc_1{
         compatible = "seekfree,pwm";
-        pwms = <&pwm_gtim 1 1000000>;   // pwm_atim 通道6 周期(用户不需要关心)
+        pwms = <&pwm_gtim 1 1000000>;   // pwm_gtim 通道2 周期(用户不需要关心)
         status = "okay";
         freq = <50>;                    // 50HZ 频率
         duty = <0>;                     // 默认 0% 的占空比
@@ -126,7 +126,7 @@
 
     zf_device_pwm_esc_2{
         compatible = "seekfree,pwm";
-        pwms = <&pwm_gtim 2 1000000>;   // pwm_atim 通道6 周期(用户不需要关心)
+        pwms = <&pwm_gtim 2 1000000>;   // pwm_gtim 通道3 周期(用户不需要关心)
         status = "okay";
         freq = <50>;                    // 50HZ 频率
         duty = <0>;                     // 默认 0% 的占空比
@@ -137,7 +137,7 @@
     // ----------电机PWM---------- //
     zf_device_pwm_motor_1{
         compatible = "seekfree,pwm";
-        pwms = <&pwm1 0 1000000>;       // pwm_atim 通道6 周期(用户不需要关心)
+        pwms = <&pwm1 0 1000000>;       // pwm1 通道0 周期(用户不需要关心)
         status = "okay";
         freq = <17000>;                 // 17KHZ 频率
         duty = <0>;                     // 默认 0% 的占空比
@@ -146,13 +146,23 @@
 
     zf_device_pwm_motor_2{
         compatible = "seekfree,pwm";
-        pwms = <&pwm2 0 1000000>;       // pwm_atim 通道6 周期(用户不需要关心)
+        pwms = <&pwm2 0 1000000>;       // pwm2 通道0 周期(用户不需要关心)
         status = "okay";
         freq = <17000>;                 // 17KHZ 频率
         duty = <0>;                     // 默认 0% 的占空比
         duty_max = <10000>;             // duty最大值，不建议修改。
     };
-    // ----------电机PWM---------- //    
+    // ----------电机PWM---------- //  
+
+    // ----------屏幕背光引脚---------- //
+    st7789v_blk: st7789v-blk 
+    {
+        compatible = "gpio-backlight";
+        status = "okay";
+        gpios = <&gpa4 11 GPIO_ACTIVE_HIGH>;        // GPIO75背光引脚
+        default-on;
+    };
+    // ----------屏幕背光引脚---------- //
 };
 
 
@@ -224,6 +234,7 @@
     };
 };
 
+
 // ----------IPS200屏幕---------- //
 // 目前只支持IPS200的SPI屏幕。
 // 不支持其他屏幕。
@@ -245,9 +256,9 @@
         buswidth = <8>;
         fps = <30>;             // 帧率
         
-        dc-gpios = <&gpa1 10 GPIO_ACTIVE_HIGH>;      // GPIO26
-        reset-gpios = <&gpa4 10 GPIO_ACTIVE_HIGH>;   // GPIO74
-
+        dc-gpios = <&gpa1 10 GPIO_ACTIVE_HIGH>;     // GPIO26
+        reset-gpios = <&gpa4 10 GPIO_ACTIVE_HIGH>;  // GPIO74
+        backlight = <&st7789v_blk>;
 
         width = <240>;     
         height= <320>;      

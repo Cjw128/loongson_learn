@@ -115,6 +115,7 @@ struct st7789v {
 	struct drm_panel panel;
 	struct spi_device *spi;
 	struct gpio_desc *reset;
+	struct gpio_desc *blk;
 	struct backlight_device *backlight;
 	struct regulator *power;
 };
@@ -170,7 +171,7 @@ static const struct drm_display_mode default_mode = {
 };
 
 static int st7789v_get_modes(struct drm_panel *panel)
-{
+{	printk("st7789v_get_modes\r\n");
 	struct drm_connector *connector = panel->connector;
 	struct drm_display_mode *mode;
 
@@ -197,7 +198,7 @@ static int st7789v_prepare(struct drm_panel *panel)
 {
 	struct st7789v *ctx = panel_to_st7789v(panel);
 	int ret;
-
+	printk("st7789v_prepare\r\n");
 	ret = regulator_enable(ctx->power);
 	if (ret)
 		return ret;
@@ -322,6 +323,10 @@ static int st7789v_enable(struct drm_panel *panel)
 {
 	struct st7789v *ctx = panel_to_st7789v(panel);
 
+	if(ctx->blk){
+		gpiod_set_value(ctx->blk, 1);
+	}
+	
 	if (ctx->backlight) {
 		ctx->backlight->props.state &= ~BL_CORE_FBBLANK;
 		ctx->backlight->props.power = FB_BLANK_UNBLANK;
@@ -337,6 +342,10 @@ static int st7789v_disable(struct drm_panel *panel)
 	int ret;
 
 	ST7789V_TEST(ret, st7789v_write_command(ctx, MIPI_DCS_SET_DISPLAY_OFF));
+
+	if(ctx->blk){
+		gpiod_set_value(ctx->blk, 0);
+	}
 
 	if (ctx->backlight) {
 		ctx->backlight->props.power = FB_BLANK_POWERDOWN;
@@ -373,6 +382,15 @@ static int st7789v_probe(struct spi_device *spi)
 	struct st7789v *ctx;
 	int ret;
 
+	printk("st7789v_probe\r\n");
+	printk("st7789v_probe\r\n");
+	printk("st7789v_probe\r\n");
+	printk("st7789v_probe\r\n");
+
+	dev_err(&spi->dev, "st7789v_probe\r\n");
+	dev_err(&spi->dev, "st7789v_probe\r\n");
+	dev_err(&spi->dev, "st7789v_probe\r\n");
+
 	ctx = devm_kzalloc(&spi->dev, sizeof(*ctx), GFP_KERNEL);
 	if (!ctx)
 		return -ENOMEM;
@@ -388,11 +406,33 @@ static int st7789v_probe(struct spi_device *spi)
 	if (IS_ERR(ctx->power))
 		return PTR_ERR(ctx->power);
 
+	dev_err(&spi->dev, "1\r\n");
+	dev_err(&spi->dev, "1\r\n");
+	dev_err(&spi->dev, "1\r\n");
+	dev_err(&spi->dev, "1\r\n");
+
 	ctx->reset = devm_gpiod_get(&spi->dev, "reset", GPIOD_OUT_LOW);
 	if (IS_ERR(ctx->reset)) {
 		dev_err(&spi->dev, "Couldn't get our reset line\n");
 		return PTR_ERR(ctx->reset);
 	}
+
+	dev_err(&spi->dev, "2\n");
+	dev_err(&spi->dev, "2\n");
+	dev_err(&spi->dev, "2\n");
+	dev_err(&spi->dev, "2\n");
+	dev_err(&spi->dev, "2\n");
+
+	ctx->blk = devm_gpiod_get(&spi->dev, "blk", GPIOD_OUT_HIGH);
+	if (IS_ERR(ctx->blk)) {
+		dev_err(&spi->dev, "Couldn't get our blk line\n");
+		return PTR_ERR(ctx->blk);
+	}
+
+	dev_err(&spi->dev, "3\n");
+	dev_err(&spi->dev, "3\n");
+	dev_err(&spi->dev, "3\n");
+	dev_err(&spi->dev, "3\n");
 
 	backlight = of_parse_phandle(spi->dev.of_node, "backlight", 0);
 	if (backlight) {
@@ -419,7 +459,7 @@ err_free_backlight:
 static int st7789v_remove(struct spi_device *spi)
 {
 	struct st7789v *ctx = spi_get_drvdata(spi);
-
+	printk("st7789v_remove\r\n");
 	drm_panel_remove(&ctx->panel);
 
 	if (ctx->backlight)

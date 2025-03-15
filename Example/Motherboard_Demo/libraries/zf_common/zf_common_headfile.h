@@ -46,7 +46,7 @@
 
 //====================================================开源库公共层====================================================
 // #include "zf_common_clock.h"
-// #include "zf_common_debug.h"
+// // #include "zf_common_debug.h"
 #include "zf_common_font.h"
 #include "zf_common_function.h"
 // #include "zf_common_interrupt.h"
@@ -77,7 +77,8 @@
 // #include "zf_driver_uart.h"
 // #include "zf_driver_usb_cdc.h"
 // #include "zf_driver_usb_cdc.h"
-
+#include "zf_driver_udp.h"
+#include "zf_driver_tcp_client.h"
 //===================================================芯片外设驱动层===================================================
 
 //===================================================外接设备驱动层===================================================
@@ -123,8 +124,8 @@
 
 
 //===================================================应用组件层===================================================
-// #include "seekfree_assistant.h"
-// #include "seekfree_assistant_interface.h"
+#include "seekfree_assistant.h"
+#include "seekfree_assistant_interface.h"
 //===================================================应用组件层===================================================
 
 //===================================================用户自定义文件===================================================

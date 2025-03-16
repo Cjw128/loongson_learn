@@ -63,7 +63,7 @@
     zf_driver_gpio_motor_1{
         status = "okay";
         compatible = "seekfree,gpio_out";
-        gpios = <&gpa4 89 GPIO_ACTIVE_HIGH>;
+        gpios = <&gpa4 9 GPIO_ACTIVE_HIGH>;
 	};
 
 

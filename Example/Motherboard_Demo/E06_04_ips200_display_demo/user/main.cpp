@@ -45,8 +45,8 @@
 //  SDA         查看 seekfree_smart_cat_pai_99 文件中 st7789v 节点定义 默认 GPIO62
 //  RST         查看 seekfree_smart_cat_pai_99 文件中 st7789v 节点定义 默认 GPIO74
 //  DC          查看 seekfree_smart_cat_pai_99 文件中 st7789v 节点定义 默认 GPIO26
-//  CS          查看 seekfree_smart_cat_pai_99 文件中 st7789v 节点定义 默认 GPIO62
-//  BL          查看 seekfree_smart_cat_pai_99 文件中 st7789v 节点定义 默认 GPIO63
+//  CS          查看 seekfree_smart_cat_pai_99 文件中 st7789v 节点定义 默认 GPIO63
+//  BL          查看 seekfree_smart_cat_pai_99 文件中 st7789v 节点定义 默认 GPIO75
 //  GND         核心板电源地 GND
 //  3V3         核心板 3V3 电源
 // 

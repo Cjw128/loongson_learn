@@ -6,6 +6,7 @@
 
 int file_io_operation(const char *path, int flags, uint8 *buf, size_t size);
 int8 file_read_string(const char *path, char *str);
+int8 file_write_string(const char *path, char *str);
 
 
 #define file_write_dat(path, value)                 file_io_operation(path, O_WRONLY, (uint8 *)&(value), sizeof(value))

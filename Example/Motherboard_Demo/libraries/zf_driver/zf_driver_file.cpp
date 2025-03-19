@@ -69,3 +69,28 @@ int8 file_read_string(const char *path, char *str)
 	return 0;
 }
 
+int8 file_write_string(const char *path, char *str)
+{
+
+	FILE *fp;
+
+    // 打开文件，如果文件存在则覆盖内容
+    fp = fopen(path, "w");
+    if(fp == NULL) 
+    {
+		printf("can not open file %s\r\n", path);
+		return -1;
+	}
+
+    // 写入数据
+    if (fputs(str, fp) == EOF) {
+        perror("写入文件时出错");
+        fclose(fp);
+        return 1;
+    }
+
+    // 关闭文件
+    fclose(fp);
+    	
+	return 0;
+}

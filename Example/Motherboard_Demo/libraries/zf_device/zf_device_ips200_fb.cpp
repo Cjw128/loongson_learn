@@ -59,14 +59,49 @@ void ips200_draw_point(uint16_t x, uint16_t y, const uint16_t color)
 //-------------------------------------------------------------------------------------------------------------------
 void ips200_draw_line (uint16 x_start, uint16 y_start, uint16 x_end, uint16 y_end, const uint16 color)
 {
-    uint16 x,y;
-    for(x = x_start; x< x_end; x++)
+    int16 x_dir = (x_start < x_end ? 1 : -1);
+    int16 y_dir = (y_start < y_end ? 1 : -1);
+    float temp_rate = 0;
+    float temp_b = 0;
+
+    do
     {
-        for(y = y_start; y< y_end; y++)
+        if(x_start != x_end)
         {
-            ips200_draw_point(x, y, color);
+            temp_rate = (float)(y_start - y_end) / (float)(x_start - x_end);
+            temp_b = (float)y_start - (float)x_start * temp_rate;
         }
-    }
+        else
+        {
+            while(y_start != y_end)
+            {
+                ips200_draw_point(x_start, y_start, color);
+                y_start += y_dir;
+            }
+            ips200_draw_point(x_start, y_start, color);
+            break;
+        }
+        if(func_abs(y_start - y_end) > func_abs(x_start - x_end))
+        {
+            while(y_start != y_end)
+            {
+                ips200_draw_point(x_start, y_start, color);
+                y_start += y_dir;
+                x_start = (int16)(((float)y_start - temp_b) / temp_rate);
+            }
+            ips200_draw_point(x_start, y_start, color);
+        }
+        else
+        {
+            while(x_start != x_end)
+            {
+                ips200_draw_point(x_start, y_start, color);
+                x_start += x_dir;
+                y_start = (int16)((float)x_start * temp_rate + temp_b);
+            }
+            ips200_draw_point(x_start, y_start, color);
+        }
+    }while(0);
 }
 
 void ips200_show_char(uint16 x, uint16 y, const char dat)

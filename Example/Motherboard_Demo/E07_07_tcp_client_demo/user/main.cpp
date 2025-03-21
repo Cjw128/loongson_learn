@@ -48,11 +48,11 @@
 //
 // 5.下载例程到久久派中
 //
-// 6.打开逐飞助手，设置为UDP，设置端口，选择合适的本机地址后点击连接
+// 6.打开逐飞助手，设置为TCP，设置端口，选择合适的本机地址后点击连接
 //
 //
 // *************************** 例程测试说明 ***************************
-// 1.当本机设备成功连接到目标后（例如电脑使用逐飞助手上位机进入UDP模式 然后本机连接到电脑的 IP 与端口）
+// 1.当本机设备成功连接到目标后（例如电脑使用逐飞助手上位机进入TCP模式 然后本机连接到电脑的 IP 与端口）
 //
 // 2.本例程会先通过调试串口发送链接信息，然后向 目标 发送一段测试数据，
 //   之后可以使用上位机发送数据给设备，设备收到之后会将数据发回给上位机
@@ -68,7 +68,7 @@
 
 uint32  read_len = 0;
 uint8   recv_buff[1024];
-uint8   temp_str[] = "seekfree this is udp demo.\r\n";
+uint8   temp_str[] = "seekfree this is TCP demo.\r\n";
 uint8   read_str[] = "read data:\r\n";
 
 int main(int, char**) 
@@ -87,16 +87,16 @@ int main(int, char**)
         return -1;
     }
 
-    // 先发消息，另外一端的UDP知道本机的IP地址。
+    // 先发消息，另外一端的TCP知道本机的IP地址。
     tcp_client_send_data(temp_str, sizeof(temp_str));
     tcp_client_send_data(temp_str, sizeof(temp_str));
     tcp_client_send_data(temp_str, sizeof(temp_str));
 
     while (true) 
     {
-        // 非阻塞式读取UDP数据。
+        // 非阻塞式读取TCP数据。
         read_len = tcp_client_read_data(recv_buff, 1024);
-        // 回显UDP数据。
+        // 回显TCP数据。
         if(read_len > 0)
         {
             tcp_client_send_data(read_str, sizeof(read_str));

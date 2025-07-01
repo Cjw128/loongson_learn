@@ -77,6 +77,7 @@
 struct pwm_info motor_1_pwm_info;
 struct pwm_info motor_2_pwm_info;
 
+timer_fd *pit_timer;
 
 
 int8 duty = 0;
@@ -97,11 +98,20 @@ void sigint_handler(int signum)
 
 void cleanup()
 {
+    // 需要先停止定时器线程，后面才能稳定关闭电机，电调，舵机等
+    pit_timer->stop();
     printf("程序异常退出，执行清理操作\n");
     // 关闭电机
     pwm_set_duty(MOTOR1_PWM, 0);   
     pwm_set_duty(MOTOR2_PWM, 0);    
 }
+
+
+void pit_callback(void)
+{
+    printf("pit_callback!!!\n");
+}
+
 
 int main(int, char**) 
 {
@@ -114,6 +124,15 @@ int main(int, char**)
 
     // 注册SIGINT信号的处理函数
     signal(SIGINT, sigint_handler);
+
+
+    // // 创建一个定时器10ms周期，回调函数为pit_callback
+    // pit_ms_init(10, pit_callback);
+
+    // 创建一个定时器10ms周期，回调函数为pit_callback
+    pit_timer = new timer_fd(10, pit_callback);
+    pit_timer->start();
+
 
     while(1)
     {

@@ -68,6 +68,8 @@
 #include "zf_common_headfile.h"
 
 
+timer_fd *pit_timer;
+
 int16 encoder_left;
 int16 encoder_right;
 
@@ -83,9 +85,13 @@ void pit_callback()
 int main(int, char**) 
 {
 
-    // 创建一个定时器10ms周期，回调函数为pit_callback
-    pit_ms_init(10, pit_callback);
+    // // 创建一个定时器10ms周期，回调函数为pit_callback
+    // pit_ms_init(10, pit_callback);
  
+    // 创建一个定时器10ms周期，回调函数为pit_callback
+    pit_timer = new timer_fd(10, pit_callback);
+    pit_timer->start();
+
     while(1)
     {
 

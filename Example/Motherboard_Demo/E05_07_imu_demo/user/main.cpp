@@ -66,6 +66,8 @@
 // 
 // 如果发现现象与说明严重不符 请参照本文件最下方 例程常见问题说明 进行排查
 
+timer_fd *pit_timer;
+
 void pit_callback()
 {
     if(DEV_IMU660RA == imu_type || DEV_IMU660RB == imu_type)
@@ -118,8 +120,12 @@ int main(int, char**)
         return -1;
     }
     
+    // // 创建一个定时器10ms周期，回调函数为pit_callback
+    // pit_ms_init(10, pit_callback);
+
     // 创建一个定时器10ms周期，回调函数为pit_callback
-    pit_ms_init(10, pit_callback);
+    pit_timer = new timer_fd(10, pit_callback);
+    pit_timer->start();
 
     while(1)
     {

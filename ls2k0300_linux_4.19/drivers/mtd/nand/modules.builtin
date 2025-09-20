@@ -1,0 +1,4 @@
+kernel/drivers/mtd/nand/raw/nand.ko
+kernel/drivers/mtd/nand/raw/nand_ecc.ko
+kernel/drivers/mtd/nand/raw/nand_bch.ko
+kernel/drivers/mtd/nand/raw/ls-nand.ko

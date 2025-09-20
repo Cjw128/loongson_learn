@@ -6,7 +6,7 @@
 
 #define UVC_WIDTH   160
 #define UVC_HEIGHT  120
-#define UVC_FPS     60
+#define UVC_FPS     110
 
 int8 uvc_camera_init(const char *path);
 int8 wait_image_refresh();

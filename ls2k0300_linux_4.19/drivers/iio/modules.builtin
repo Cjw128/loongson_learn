@@ -1,0 +1,5 @@
+kernel/drivers/iio/industrialio.ko
+kernel/drivers/iio/adc/loongson-2k300-adc.ko
+kernel/drivers/iio/adc/loongson-2k300-adc-core.ko
+kernel/drivers/iio/buffer/industrialio-triggered-buffer.ko
+kernel/drivers/iio/buffer/kfifo_buf.ko

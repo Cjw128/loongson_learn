@@ -1,0 +1,53 @@
+!<thin>
+//                                              464       `
+mtdcore.o/
+mtdsuper.o/
+mtdconcat.o/
+mtdpart.o/
+mtdchar.o/
+ofpart.o/
+cmdlinepart.o/
+mtd_blkdevs.o/
+mtdblock.o/
+chips/chipreg.o/
+nand/raw/nand_base.o/
+nand/raw/nand_bbt.o/
+nand/raw/nand_timings.o/
+nand/raw/nand_ids.o/
+nand/raw/nand_amd.o/
+nand/raw/nand_hynix.o/
+nand/raw/nand_macronix.o/
+nand/raw/nand_micron.o/
+nand/raw/nand_samsung.o/
+nand/raw/nand_toshiba.o/
+nand/raw/nand_ecc.o/
+nand/raw/nand_bch.o/
+nand/raw/ls-nand.o/
+spi-nor/spi-nor.o/
+spi-nor/ls-quadspi.o/
+
+/0              0           0     0     644     111096    `
+/11             0           0     0     644     8392      `
+/23             0           0     0     644     33744     `
+/36             0           0     0     644     62296     `
+/47             0           0     0     644     43176     `
+/58             0           0     0     644     15776     `
+/68             0           0     0     644     17616     `
+/83             0           0     0     644     43672     `
+/98             0           0     0     644     12504     `
+/110            0           0     0     644     9904      `
+/127            0           0     0     644     243776    `
+/149            0           0     0     644     47776     `
+/170            0           0     0     644     5416      `
+/195            0           0     0     644     14104     `
+/216            0           0     0     644     3616      `
+/237            0           0     0     644     21808     `
+/260           /0           0     0     644     4664      `
+/286            0           0     0     644     18888     `
+/310            0           0     0     644     8128      `
+/335            0           0     0     644     6608      `
+/360            0           0     0     644     10464     `
+/381            0           0     0     644     11496     `
+/402            0           0     0     644     47720     `
+/422            0           0     0     644     96952     `
+/441            0           0     0     644     21304     `

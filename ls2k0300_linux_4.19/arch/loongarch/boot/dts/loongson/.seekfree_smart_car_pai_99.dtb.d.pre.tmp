@@ -1,0 +1,7 @@
+seekfree_smart_car_pai_99.o: \
+ arch/loongarch/boot/dts/loongson/seekfree_smart_car_pai_99.dts \
+ arch/loongarch/boot/dts/loongson/loongson_2k0300.dtsi \
+ scripts/dtc/include-prefixes/dt-bindings/interrupt-controller/irq.h \
+ scripts/dtc/include-prefixes/dt-bindings/gpio/gpio.h \
+ scripts/dtc/include-prefixes/dt-bindings/pinctrl/ls2k300-pinfunc.h \
+ arch/loongarch/boot/dts/loongson/2k0300-pinctrl.dtsi

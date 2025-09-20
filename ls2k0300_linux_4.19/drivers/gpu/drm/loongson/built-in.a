@@ -1,0 +1,42 @@
+!<thin>
+//                                              384       `
+loongson_drv.o/
+loongson_irq.o/
+loongson_encoder.o/
+loongson_crtc.o/
+loongson_connector.o/
+loongson_fb.o/
+loongson_cursor.o/
+loongson_vbios.o/
+loongson_ttm.o/
+loongson_debugfs.o/
+loongson_i2c.o/
+loongson_backlight.o/
+loongson_prime.o/
+bridge/bridge_phy.o/
+bridge/it66121_drv.o/
+bridge/lt8618_drv.o/
+bridge/ms7210_drv.o/
+bridge/ncs8805_drv.o/
+bridge/lt8619_drv.o/
+bridge/lt9721_drv.o/
+/0              0           0     0     644     77792     `
+/16             0           0     0     644     11512     `
+/32             0           0     0     644     15000     `
+/52            /0           0     0     644     36496     `
+/69             0           0     0     644     16088     `
+/91             0           0     0     644     19912     `
+/106            0           0     0     644     10696     `
+/125            0           0     0     644     56720     `
+/143            0           0     0     644     29472     `
+/159            0           0     0     644     11720     `
+/179            0           0     0     644     9872      `
+/195            0           0     0     644     39456     `
+/217            0           0     0     644     10328     `
+/235            0           0     0     644     181632    `
+/256            0           0     0     644     30168     `
+/278            0           0     0     644     42104     `
+/299            0           0     0     644     21888     `
+/320            0           0     0     644     49144     `
+/342            0           0     0     644     63128     `
+/363            0           0     0     644     13168     `

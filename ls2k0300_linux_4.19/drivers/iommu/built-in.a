@@ -1,0 +1,13 @@
+!<thin>
+//                                              72        `
+iommu.o/
+iommu-traces.o/
+iommu-sysfs.o/
+of_iommu.o/
+loongarch_iommu.o/
+
+/0              0           0     0     644     107984    `
+/9              0           0     0     644     48840     `
+/25             0           0     0     644     9176      `
+/40             0           0     0     644     11808     `
+/52             0           0     0     644     118680    `

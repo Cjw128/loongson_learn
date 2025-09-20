@@ -1,0 +1,3 @@
+kernel/drivers/staging/fbtft/fbtft.ko
+kernel/drivers/staging/fbtft/fb_st7735r.ko
+kernel/drivers/staging/fbtft/fb_st7789v.ko

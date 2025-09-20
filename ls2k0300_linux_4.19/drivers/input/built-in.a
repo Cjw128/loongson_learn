@@ -1,0 +1,52 @@
+!<thin>
+//                                              450       `
+input.o/
+input-compat.o/
+input-mt.o/
+ff-core.o/
+sparse-keymap.o/
+input-leds.o/
+mousedev.o/
+evdev.o/
+keyboard/atkbd.o/
+mouse/psmouse-base.o/
+mouse/synaptics.o/
+mouse/focaltech.o/
+mouse/alps.o/
+mouse/byd.o/
+mouse/elantech.o/
+mouse/logips2pp.o/
+mouse/sentelic.o/
+mouse/trackpoint.o/
+mouse/cypress_ps2.o/
+mouse/pixart_ps2.o/
+mouse/psmouse-smbus.o/
+touchscreen/of_touchscreen.o/
+touchscreen/gt9xx.o/
+touchscreen/gt9xx_update.o/
+touchscreen/goodix_tool.o/
+/0              0           0     0     644     155280    `
+/9              0           0     0     644     5248      `
+/25             0           0     0     644     20928     `
+/37             0           0     0     644     17224     `
+/48            /0           0     0     644     13848     `
+/65             0           0     0     644     11896     `
+/79             0           0     0     644     57888     `
+/91             0           0     0     644     59056     `
+/100            0           0     0     644     87696     `
+/118            0           0     0     644     108440    `
+/140            0           0     0     644     80392     `
+/159            0           0     0     644     15688     `
+/178            0           0     0     644     113824    `
+/192            0           0     0     644     13760     `
+/205            0           0     0     644     80680     `
+/223            0           0     0     644     18040     `
+/242            0           0     0     644     42576     `
+/260            0           0     0     644     42888     `
+/280            0           0     0     644     23088     `
+/301            0           0     0     644     16072     `
+/321           /0           0     0     644     20464     `
+/344            0           0     0     644     12088     `
+/374            0           0     0     644     156752    `
+/395            0           0     0     644     118992    `
+/423            0           0     0     644     45040     `

@@ -1,0 +1,2 @@
+kernel/drivers/platform/loongarch/cpu_hwmon.ko
+kernel/drivers/platform/loongarch/loongson_generic_laptop.ko

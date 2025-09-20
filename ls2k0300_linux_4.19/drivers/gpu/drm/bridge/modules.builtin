@@ -1,0 +1,4 @@
+kernel/drivers/gpu/drm/bridge/dumb-vga-dac.ko
+kernel/drivers/gpu/drm/bridge/sii902x.ko
+kernel/drivers/gpu/drm/bridge/lt8618.ko
+kernel/drivers/gpu/drm/bridge/ti-tfp410.ko

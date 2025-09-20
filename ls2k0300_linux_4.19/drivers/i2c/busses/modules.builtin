@@ -1,0 +1,3 @@
+kernel/drivers/i2c/busses/i2c-gpio.ko
+kernel/drivers/i2c/busses/i2c-ls2x.ko
+kernel/drivers/i2c/busses/i2c-ls.ko

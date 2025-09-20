@@ -1,0 +1,1570 @@
+# 1 "arch/loongarch/boot/dts/loongson/seekfree_smart_car_pai_99.dts"
+# 1 "<built-in>"
+# 1 "<command-line>"
+# 1 "arch/loongarch/boot/dts/loongson/seekfree_smart_car_pai_99.dts"
+# 1 "arch/loongarch/boot/dts/loongson/loongson_2k0300.dtsi" 1
+/dts-v1/;
+# 1 "./scripts/dtc/include-prefixes/dt-bindings/interrupt-controller/irq.h" 1
+# 3 "arch/loongarch/boot/dts/loongson/loongson_2k0300.dtsi" 2
+# 1 "./scripts/dtc/include-prefixes/dt-bindings/gpio/gpio.h" 1
+# 4 "arch/loongarch/boot/dts/loongson/loongson_2k0300.dtsi" 2
+# 1 "./scripts/dtc/include-prefixes/dt-bindings/pinctrl/ls2k300-pinfunc.h" 1
+# 5 "arch/loongarch/boot/dts/loongson/loongson_2k0300.dtsi" 2
+/ {
+ model = "loongson,generic";
+ compatible = "loongson,loongson3";
+ #address-cells = <2>;
+ #size-cells = <2>;
+
+ aliases {
+  ethernet0 = &gmac0;
+  ethernet1 = &gmac1;
+  serial0 = &cpu_uart0;
+  serial1 = &cpu_uart1;
+  serial2 = &cpu_uart2;
+  serial3 = &cpu_uart3;
+  serial4 = &cpu_uart4;
+  serial5 = &cpu_uart5;
+  serial6 = &cpu_uart6;
+  spi0 = &spi0;
+  spi1 = &spi1;
+  spi2 = &spi2;
+  i2c0 = &i2c0;
+  i2c1 = &i2c1;
+  i2c2 = &i2c2;
+  i2c3 = &i2c3;
+  gpa0 = &gpa0;
+  gpa1 = &gpa1;
+  gpa2 = &gpa2;
+  gpa3 = &gpa3;
+  gpa4 = &gpa4;
+  gpa5 = &gpa5;
+  gpa6 = &gpa6;
+
+ };
+
+ chosen {
+  stdout-path = "serial0:115200n8";
+  bootargs = "earlycon";
+ };
+
+ cpus {
+  #address-cells = <1>;
+  #size-cells = <0>;
+  cpu-map {
+   cluster0 {
+    core0 {
+     cpu = <&cpu0>;
+    };
+   };
+  };
+
+
+  cpu0: cpu@10000 {
+   device_type = "cpu";
+   compatible = "loongarch";
+   reg=<0>;
+   numa-node-id = <0>;
+  };
+
+ };
+
+ cpuic: interrupt-controller {
+  compatible = "loongson,cpu-interrupt-controller";
+  interrupt-controller;
+  #interrupt-cells = <1>;
+ };
+
+ icu: interrupt-controller@16001400 {
+  compatible = "loongson,2k500-icu";
+  interrupt-controller;
+  #interrupt-cells = <1>;
+  reg = <0 0x16001400 0 0x40
+   0 0x16001040 0 16>;
+  interrupt-parent = <&cpuic>;
+  interrupt-names = "cascade";
+  interrupts = <4>;
+ };
+
+ soc {
+  compatible = "ls,nbus", "simple-bus";
+  #address-cells = <2>;
+  #size-cells = <2>;
+  ranges = <0 0x10000000 0 0x10000000 0 0x10000000
+   0 0x2000000 0 0x2000000 0 0x2000000
+   0 0x20000000 0 0x20000000 0 0x10000000
+   0 0x40000000 0 0x40000000 0 0x40000000
+   0xfe 0x00000000 0xfe 0x00000000 0 0x40000000>;
+
+  isa@16400000 {
+   compatible = "isa";
+   #size-cells = <1>;
+   #address-cells = <2>;
+   ranges = <1 0 0 0x16400000 0x4000>;
+  };
+
+  pinctrl: pinctrl@0x16000490{
+   compatible = "loongson,ls2k300-pinctrl";
+   reg = <0 0x16000490 0 0x10
+          0 0x16104000 0 0x1000>;
+   loongson,regs-offset = <0x4>;
+   loongson,num-chips = <7>;
+   #address-cells = <2>;
+   #size-cells = <2>;
+
+   gpa0: gpa0@0x16104000{
+    gpio-controller;
+    #gpio-cells = <2>;
+    #loongson,pinmux-cells = <2>;
+
+    interrupt-controller;
+    #interrupt-cells = <3>;
+    interrupt-parent = <&icu>;
+    interrupts =<53>;
+   };
+
+   gpa1: gpa1@0x16104000{
+    gpio-controller;
+    #gpio-cells = <2>;
+    #loongson,pinmux-cells = <2>;
+
+    interrupt-controller;
+    #interrupt-cells = <3>;
+    interrupt-parent = <&icu>;
+    interrupts =<54>;
+   };
+
+   gpa2: gpa2@0x16104000{
+    gpio-controller;
+    #gpio-cells = <2>;
+    #loongson,pinmux-cells = <2>;
+
+    interrupt-controller;
+    #interrupt-cells = <3>;
+    interrupt-parent = <&icu>;
+    interrupts =<55>;
+   };
+
+   gpa3: gpa3@0x16104000{
+    gpio-controller;
+    #gpio-cells = <2>;
+    #loongson,pinmux-cells = <2>;
+
+    interrupt-controller;
+    #interrupt-cells = <3>;
+    interrupt-parent = <&icu>;
+    interrupts =<56>;
+   };
+
+   gpa4: gpa4@0x16104000{
+    gpio-controller;
+    #gpio-cells = <2>;
+    #loongson,pinmux-cells = <2>;
+
+    interrupt-controller;
+    #interrupt-cells = <3>;
+    interrupt-parent = <&icu>;
+    interrupts =<57>;
+   };
+
+   gpa5: gpa5@0x16104000{
+    gpio-controller;
+    #gpio-cells = <2>;
+    #loongson,pinmux-cells = <2>;
+
+    interrupt-controller;
+    #interrupt-cells = <3>;
+    interrupt-parent = <&icu>;
+    interrupts =<58>;
+   };
+
+   gpa6: gpa6@0x16104000{
+    gpio-controller;
+    #gpio-cells = <2>;
+    #loongson,pinmux-cells = <2>;
+
+    interrupt-controller;
+    #interrupt-cells = <3>;
+    interrupt-parent = <&icu>;
+    interrupts =<59>;
+   };
+  };
+
+  cpu_uart0: serial@0x16100000 {
+   #device_type = "serial";
+   status = "disabled";
+   compatible = "ns16550,loongson,frac";
+   reg = <0 0x16100000 0 0x10>;
+   clock-frequency = <100000000>;
+   interrupt-parent = <&icu>;
+   interrupts = <0>;
+   no-loopback-test;
+  };
+
+  cpu_uart1: serial@0x16100400 {
+   #device_type = "serial";
+   status = "disabled";
+   compatible = "ns16550,loongson,frac";
+   reg = <0 0x16100400 0 0x10>;
+   clock-frequency = <100000000>;
+   interrupt-parent = <&icu>;
+   interrupts = <1>;
+   no-loopback-test;
+  };
+
+  cpu_uart2: serial@0x16100800 {
+   #device_type = "serial";
+   status = "disabled";
+   compatible = "ns16550,loongson,frac";
+   reg = <0 0x16100800 0 0x10>;
+   clock-frequency = <100000000>;
+   interrupt-parent = <&icu>;
+   interrupts = <2>;
+   no-loopback-test;
+  };
+
+  cpu_uart3: serial@0x16100c00 {
+   #device_type = "serial";
+   status = "disabled";
+   compatible = "ns16550,loongson,frac";
+   reg = <0 0x16100c00 0 0x10>;
+   clock-frequency = <100000000>;
+   interrupt-parent = <&icu>;
+   interrupts = <2>;
+   no-loopback-test;
+  };
+  cpu_uart4: serial@0x16101000 {
+   #device_type = "serial";
+   status = "disabled";
+   compatible = "ns16550,loongson,frac";
+   reg = <0 0x16101000 0 0x10>;
+   clock-frequency = <100000000>;
+   interrupt-parent = <&icu>;
+   interrupts = <2>;
+   no-loopback-test;
+  };
+  cpu_uart5: serial@0x16101400 {
+   #device_type = "serial";
+   status = "disabled";
+   compatible = "ns16550,loongson,frac";
+   reg = <0 0x16101400 0 0x10>;
+   clock-frequency = <100000000>;
+   interrupt-parent = <&icu>;
+   interrupts = <2>;
+   no-loopback-test;
+  };
+  cpu_uart6: serial@0x16101800 {
+   #device_type = "serial";
+   status = "disabled";
+   compatible = "ns16550,loongson,frac";
+   reg = <0 0x16101800 0 0x10>;
+   clock-frequency = <100000000>;
+   interrupt-parent = <&icu>;
+   interrupts = <3>;
+   no-loopback-test;
+  };
+  cpu_uart7: serial@0x16101c00 {
+   #device_type = "serial";
+   status = "disabled";
+   compatible = "ns16550,loongson,frac";
+   reg = <0 0x16101c00 0 0x10>;
+   clock-frequency = <100000000>;
+   interrupt-parent = <&icu>;
+   interrupts = <3>;
+   no-loopback-test;
+  };
+  cpu_uart8: serial@0x16102000 {
+   #device_type = "serial";
+   status = "disabled";
+   compatible = "ns16550,loongson,frac";
+   reg = <0 0x16102000 0 0x10>;
+   clock-frequency = <100000000>;
+   interrupt-parent = <&icu>;
+   interrupts = <3>;
+   no-loopback-test;
+  };
+  cpu_uart9: serial@0x16102400 {
+   #device_type = "serial";
+   status = "disabled";
+   compatible = "ns16550,loongson,frac";
+   reg = <0 0x16102400 0 0x10>;
+   clock-frequency = <100000000>;
+   interrupt-parent = <&icu>;
+   interrupts = <3>;
+   no-loopback-test;
+  };
+
+  rtc0: rtc@16128000{
+   compatible = "loongson,ls300-rtc";
+   reg = <0 0x16128000 0 0x100>;
+   interrupt-parent = <&icu>;
+   interrupts = <40>;
+  };
+
+
+
+  adc: adc@0x1611c000 {
+   compatible = "loongson,ls2k300-adc";
+   status = "disabled";
+   reg = <0 0x1611c000 0 0x50>;
+   num-channels = <0>;
+  };
+
+
+  dma0: dma@0x1612c000 {
+   compatible = "loongson,lsia-dma";
+   reg = <0 0x1612c000 0 0xff>;
+   interrupt-parent = <&icu>;
+   interrupts = <23>,
+         <24>,
+         <25>,
+         <26>,
+         <27>,
+         <28>,
+         <29>,
+         <30>;
+   #dma-cells = <2>;
+  };
+
+  can0: can@0x16110000 {
+   compatible = "ls,lscan";
+   status = "disabled";
+   reg = <0 0x16110000 0 0x400>;
+   ls,clock-frequency = <100000000>;
+   ls,canfd-dmarx;
+   #interrupt-cells = <2>;
+   interrupt-parent = <&icu>;
+   interrupts = <8>;
+   dmas = <&dma0 0 0xaae>;
+   dma-names = "rx";
+  };
+  can1: can@0x16110400 {
+   compatible = "ls,lscan";
+   status = "disabled";
+   reg = <0 0x16110400 0 0x400>;
+   ls,clock-frequency = <100000000>;
+   ls,canfd-dmarx;
+   #interrupt-cells = <2>;
+   interrupt-parent = <&icu>;
+   interrupts = <9>;
+
+   dmas = <&dma0 1 0xaae>;
+   dma-names = "rx";
+  };
+
+  can2: can@0x16110800 {
+   compatible = "ls,lscan";
+   status = "disabled";
+   reg = <0 0x16110800 0 0x400>;
+   ls,clock-frequency = <100000000>;
+   ls,canfd-dmarx;
+   #interrupt-cells = <2>;
+   interrupt-parent = <&icu>;
+   interrupts = <10>;
+
+   dmas = <&dma0 2 0xaae>;
+   dma-names = "rx";
+  };
+
+  can3: can@0x16110c00 {
+   compatible = "ls,lscan";
+   status = "disabled";
+   reg = <0 0x16110c00 0 0x400>;
+   ls,clock-frequency = <100000000>;
+   ls,canfd-dmarx;
+   #interrupt-cells = <2>;
+   interrupt-parent = <&icu>;
+   interrupts = <11>;
+   dmas = <&dma0 3 0xaae>;
+   dma-names = "rx";
+
+  };
+
+
+  gmac0: ethernet@0x16020000 {
+   status = "disabled";
+   compatible = "snps,dwmac-3.70a";
+   reg = <0 0x16020000 0 0x10000>;
+   interrupt-parent = <&icu>;
+   interrupts = <49>;
+   interrupt-names = "macirq";
+   mac-address = [ 64 48 48 48 48 60 ];
+   phy-mode = "rgmii";
+   bus_id = <0x0>;
+   phy_addr = <0xffffffff>;
+   dma-mask = <0xffffffff 0xffffffff>;
+  };
+
+  gmac1: ethernet@0x16030000 {
+   status = "disabled";
+   compatible = "snps,dwmac-3.70a";
+   reg = <0 0x16030000 0 0x10000>;
+   interrupt-parent = <&icu>;
+   interrupts = <50>;
+   interrupt-names = "macirq";
+   mac-address = [ 64 48 48 48 48 61 ];
+   phy-mode = "rgmii";
+   bus_id = <0x1>;
+   phy_addr = <0xffffffff>;
+   dma-mask = <0xffffffff 0xffffffff>;
+  };
+
+  emmc0: mmc0@0x16140000 {
+   status = "disabled";
+   #address-cells = <2>;
+   compatible = "loongson,ls2k_sdio_1.2";
+   reg = <0 0x16140000 0 0x1000>;
+   interrupt-parent = <&icu>;
+   interrupts = <31>;
+   interrupt-names = "ls2k_mci_irq";
+   dma-mask = <0xffffffff 0xffffffff>;
+   clock-frequency = <0 100000000>;
+   bus-width = <8>;
+   mmc-hs200-1_8v;
+   no-sd;
+   no-sdio;
+   non-removable;
+  };
+
+  sdio1: sdio1@0x16148000 {
+   status = "disabled";
+   #address-cells = <2>;
+   compatible = "loongson,ls2k_sdio_1.2";
+   reg = <0 0x16148000 0 0x1000>;
+   interrupt-parent = <&icu>;
+   interrupts = <32>;
+   interrupt-names = "ls2k_mci_irq";
+   clock-frequency = <0 100000000>;
+   dma-mask = <0xffffffff 0xffffffff>;
+   bus-width = <4>;
+   cap-sd-highspeed;
+   no-mmc;
+  };
+
+  ehci: ehci@0x16080000 {
+   status = "okay";
+   compatible = "loongson,ls2k-ehci", "generic-ehci";
+   reg = <0 0x16080000 0 0x8000>;
+   interrupt-parent = <&icu>;
+   interrupts = <46>;
+   dma-mask = <0xffffffff 0xffffffff>;
+  };
+# 454 "arch/loongarch/boot/dts/loongson/loongson_2k0300.dtsi"
+  ohci: ohci@0x16088000 {
+   status = "okay";
+   compatible = "loongson,ls2k-ohci", "generic-ohci";
+   reg = <0 0x16088000 0 0x8000>;
+   interrupt-parent = <&icu>;
+   interrupts = <47>;
+   dma-mask = <0x0 0xffffffff>;
+  };
+  otg: otg@0x16040000 {
+   status = "okay";
+   compatible = "loongson,loongson2-dwc2", "loongson,ls2k-otg";
+   reg = <0 0x16040000 0 0x40000>;
+   interrupt-parent = <&icu>;
+   interrupts = <48>;
+   dma-mask = <0x0 0xffffffff>;
+  };
+
+   i2c0: i2c@16108000 {
+       status = "disabled";
+       compatible = "loongson,ls-new-i2c";
+       reg = <0 0x16108000 0 0x400>;
+       interrupt-parent = <&icu>;
+       interrupts = <4>;
+       #address-cells = <1>;
+   #size-cells = <0>;
+  };
+
+   i2c1: i2c@16109000 {
+       status = "disabled";
+       compatible = "loongson,ls-new-i2c";
+       reg = <0 0x16109000 0 0x400>;
+       interrupt-parent = <&icu>;
+       interrupts = <4>;
+       #address-cells = <1>;
+   #size-cells = <0>;
+  };
+
+   i2c2: i2c@1610a000 {
+       status = "disabled";
+       compatible = "loongson,ls-new-i2c";
+       reg = <0 0x1610a000 0 0x400>;
+       interrupt-parent = <&icu>;
+       interrupts = <5>;
+       #address-cells = <1>;
+   #size-cells = <0>;
+  };
+
+   i2c3: i2c@1610b000 {
+       status = "disabled";
+       compatible = "loongson,ls-new-i2c";
+       reg = <0 0x1610b000 0 0x400>;
+       interrupt-parent = <&icu>;
+       interrupts = <5>;
+       #address-cells = <1>;
+   #size-cells = <0>;
+  };
+
+  i2s: i2s@0x16114000 {
+   status = "disabled";
+   compatible = "loongson,ls2k0300-i2s";
+                 reg = <0 0x16114000 0 0x10>;
+                 clock-frequency = <100000000>;
+        };
+        audio: audio@0x16114000 {
+
+                compatible = "loongson,ls-pcm-generic-audio";
+                reg = <0 0x16114000 0 0x10>;
+  dmas = <&dma0 5 0xa92>,
+   <&dma0 4 0xa82>;
+  dma-names = "i2s_play", "i2s_record";
+        };
+  sound: sound{
+                compatible = "loongson,ls-sound";
+                loongson,i2s-controller = <&i2s>;
+                loongson,audio-codec = <&audio>;
+
+
+        };
+
+
+  spi0: spi0@16010000 {
+   status = "disabled";
+   compatible = "ls,ls-qspi";
+   reg = <0 0x16010000 0 0x10>;
+   reg-names = "qspi";
+   #address-cells = <1>;
+   #size-cells = <0>;
+  };
+
+        spi1: spi1@16018000 {
+            status = "disabled";
+            compatible = "loongson,ls-spi";
+            reg = <0 0x16018000 0 0x10>;
+            #address-cells = <1>;
+            #size-cells = <0>;
+        };
+
+  spi2: spi2@1610c000 {
+   compatible = "loongson,ls-spi-v1";
+   status ="disabled";
+   #address-cells = <1>;
+   #size-cells = <0>;
+   reg = <0 0x1610c000 0 0x1000>;
+   spi-max-frequency = <50000000>;
+   interrupt-parent = <&icu>;
+   interrupts = <6>;
+   num-cs = <1>;
+   ls,bus_num = <1>;
+
+   spidev@0{
+    compatible = "rohm,dh2228fv";
+    spi-max-frequency = <50000000>;
+    reg = <0>;
+   };
+  };
+
+  pwm0: pwm@1611b000{
+     compatible = "loongson,ls300-pwm";
+     reg = <0 0x1611b000 0 0x10>;
+     clock-frequency = <100000000>;
+     interrupt-parent = <&icu>;
+     interrupts = <16>;
+     #pwm-cells = <2>;
+
+     status = "disabled";
+  };
+
+  pwm1: pwm@1611b010{
+     compatible = "loongson,ls300-pwm";
+     reg = <0 0x1611b010 0 0x10>;
+     clock-frequency = <100000000>;
+     interrupt-parent = <&icu>;
+     interrupts = <16>;
+     #pwm-cells = <2>;
+
+     status = "disabled";
+  };
+
+  pwm2: pwm@1611b020{
+     compatible = "loongson,ls300-pwm";
+     reg = <0 0x1611b020 0 0x10>;
+     clock-frequency = <100000000>;
+     interrupt-parent = <&icu>;
+     interrupts = <17>;
+     #pwm-cells = <2>;
+
+     status = "disabled";
+  };
+
+  pwm3: pwm@1611b030{
+     compatible = "loongson,ls300-pwm";
+     reg = <0 0x1611b030 0 0x10>;
+     clock-frequency = <100000000>;
+     interrupt-parent = <&icu>;
+     interrupts = <17>;
+     #pwm-cells = <2>;
+
+     status = "disabled";
+  };
+
+  pwm_atim: pwm@16118000{
+            compatible = "loongson,ls300-pwm-atim";
+            reg = <0 0x16118000 0 0x54>;
+            clock-frequency = <100000000>;
+            #pwm-cells = <2>;
+
+            status = "disabled";
+        };
+
+        pwm_gtim: pwm@16119000{
+            compatible = "loongson,ls300-pwm-gtim";
+            reg = <0 0x16119000 0 0x54>;
+            clock-frequency = <100000000>;
+            #pwm-cells = <2>;
+
+            status = "disabled";
+        };
+
+  pmc: syscon@0x100d0000 {
+                        compatible = "syscon";
+                        reg = <0x0 0x16124000 0x0 0x8>;
+         };
+     reboot {
+              compatible ="syscon-reboot";
+              regmap = <&pmc>;
+   offset = <0x0>;
+   mask = <0x1>;
+          };
+  dc: dc@0x16090000 {
+       status = "disabled";
+       compatible = "loongson,la2k0300-dc";
+       reg = <0 0x16090000 0 0x10000>;
+       interrupt-parent = <&icu>;
+       interrupts = <51>;
+       dma-mask = <0x00000000 0xffffffff>;
+
+       output-ports = <&dvo0>;
+       #address-cells = <1>;
+       #size-cells = <0>;
+       dc_identify {
+    model = "loongson,2k300";
+    compatible = "loongson,ls2k";
+       };
+       dvo0: dvo@0 {
+
+   reg = <0>;
+   connector = "dpi-connector";
+   status = "ok";
+   display-timings {
+       native-mode = <&mode_1024x600_60>;
+       mode_1024x600_60: display-timing@0 {
+        clock-frequency = <51200000>;
+        hactive = <1024>;
+        hfront-porch = <160>;
+        hsync-len = <4>;
+        hback-porch = <156>;
+
+        vactive = <600>;
+        vfront-porch = <11>;
+        vsync-len = <1>;
+        vback-porch = <23>;
+
+        vsync-active = <0>;
+        hsync-active = <0>;
+    };
+      };
+  };
+   };
+ };
+};
+# 1 "arch/loongarch/boot/dts/loongson/2k0300-pinctrl.dtsi" 1
+
+&pinctrl{
+ lcd_pin: lcd-pin{
+  lcd_pin_f0: lcd-pin-f0{
+   loongson,pinmux = <&gpa0 0 15>;
+   loongson,pinmux-funcsel = <3>;
+  };
+  lcd_pin_f1: lcd-pin-f1{
+   loongson,pinmux = <&gpa1 0 11>;
+   loongson,pinmux-funcsel = <3>;
+  };
+ };
+
+ gmac0_pin: gmac0-pin{
+  gmac0_12bit_f0: gmac0-12bit-f0{
+   loongson,pinmux = <&gpa1 12 15>;
+   loongson,pinmux-funcsel = <3>;
+  };
+  gmac0_12bit_f1: gmac0-12bit-f1{
+   loongson,pinmux = <&gpa2 0 7>;
+   loongson,pinmux-funcsel = <3>;
+  };
+  gmac0_16bit_f0: gmac0-16bit-f0{
+   loongson,pinmux = <&gpa2 8 9>;
+   loongson,pinmux-funcsel = <1>;
+  };
+  gmac0_16bit_f1: gmac0-16bit-f1{
+   loongson,pinmux = <&gpa4 8 9>;
+   loongson,pinmux-funcsel = <2>;
+  };
+ };
+
+ gmac1_pin: gmac1-pin{
+  gmac1_12bit_f0: gmac1-12bit-f0{
+   loongson,pinmux = <&gpa2 12 15>;
+   loongson,pinmux-funcsel = <1>;
+  };
+  gmac1_12bit_f1: gmac1-12bit-f1{
+   loongson,pinmux = <&gpa3 0 7>;
+   loongson,pinmux-funcsel = <1>;
+  };
+  gmac1_16bit_f0: gmac1-16bit-f0{
+   loongson,pinmux = <&gpa2 10 11>;
+   loongson,pinmux-funcsel = <1>;
+  };
+  gmac1_16bit_f1: gmac1-16bit-f1{
+   loongson,pinmux = <&gpa4 10 11>;
+   loongson,pinmux-funcsel = <2>;
+  };
+ };
+
+ spi0_pin: spi0-pin{
+  spi0_6bit_f0: spi0_6bit_f0{
+   loongson,pinmux = <&gpa3 8 11>;
+   loongson,pinmux-funcsel = <3>;
+  };
+  spi0_6bit_f1: spi0_6bit_f1{
+   loongson,pinmux = <&gpa4 5 6>;
+   loongson,pinmux-funcsel = <1>;
+  };
+  spi0_7bit: spi0_7bit{
+   loongson,pinmux = <&gpa4 4 4>;
+   loongson,pinmux-funcsel = <1>;
+  };
+
+ };
+
+ spi1_pin: spi1-pin{
+  spi1_4bit: spi1-4bit{
+   loongson,pinmux = <&gpa3 12 15>;
+   loongson,pinmux-funcsel = <3>;
+  };
+  spi1_7bit_f0: spi1-7bit-f0{
+   loongson,pinmux = <&gpa4 14 15>;
+   loongson,pinmux-funcsel = <2>;
+  };
+  spi1_7bit_f1: spi1-7bit-f1{
+                        loongson,pinmux = <&gpa5 0 0>;
+                        loongson,pinmux-funcsel = <2>;
+                };
+
+ };
+
+ spi2_pin: spi2-pin{
+  loongson,pinmux = <&gpa4 0 3>;
+  loongson,pinmux-funcsel = <3>;
+ };
+
+ spi3_pin: spi3-pin{
+  loongson,pinmux = <&gpa5 2 5>;
+  loongson,pinmux-funcsel = <1>;
+ };
+
+ pwm0_pin: pwm0-pin{
+  pwm0_mux_m0: pwm0-mux-m0{
+   loongson,pinmux = <&gpa4 0 0>;
+   loongson,pinmux-funcsel = <1>;
+  };
+  pwm0_mux_m1: pwm0-mux-m1{
+   loongson,pinmux = <&gpa5 6 6>;
+   loongson,pinmux-funcsel = <2>;
+  };
+  pwm0_mux_m2: pwm0-mux-m2{
+   loongson,pinmux = <&gpa6 6 6>;
+   loongson,pinmux-funcsel = <2>;
+  };
+ };
+
+ pwm1_pin: pwm1-pin{
+  pwm1_mux_m0: pwm1-mux-m0{
+   loongson,pinmux = <&gpa4 1 1>;
+   loongson,pinmux-funcsel = <1>;
+  };
+  pwm1_mux_m1: pwm1-mux-m1{
+   loongson,pinmux = <&gpa5 7 7>;
+   loongson,pinmux-funcsel = <2>;
+  };
+  pwm1_mux_m2: pwm1-mux-m2{
+   loongson,pinmux = <&gpa6 7 7>;
+   loongson,pinmux-funcsel = <2>;
+  };
+ };
+
+ pwm2_pin: pwm2-pin{
+  pwm2_mux_m0: pwm2-mux-m0{
+   loongson,pinmux = <&gpa4 2 2>;
+   loongson,pinmux-funcsel = <1>;
+  };
+  pwm2_mux_m1: pwm2-mux-m1{
+   loongson,pinmux = <&gpa5 8 8>;
+   loongson,pinmux-funcsel = <2>;
+  };
+  pwm2_mux_m2: pwm2-mux-m2{
+   loongson,pinmux = <&gpa6 8 8>;
+   loongson,pinmux-funcsel = <2>;
+  };
+ };
+
+ pwm3_pin: pwm3-pin{
+  pwm3_mux_m0: pwm3-mux-m0{
+   loongson,pinmux = <&gpa4 3 3>;
+   loongson,pinmux-funcsel = <1>;
+  };
+  pwm3_mux_m1: pwm3-mux-m1{
+   loongson,pinmux = <&gpa5 9 9>;
+   loongson,pinmux-funcsel = <2>;
+  };
+  pwm3_mux_m2: pwm3-mux-m2{
+   loongson,pinmux = <&gpa6 9 9>;
+   loongson,pinmux-funcsel = <2>;
+  };
+ };
+
+ atim_ch1_pin: atim-ch1-pin{
+        atim_ch1_pin_m0: atim-ch1-pin-m0{
+            loongson,pinmux = <&gpa1 12 12>;
+            loongson,pinmux-funcsel = <2>;
+        };
+        atim_ch1_pin_m1: atim-ch1-pin-m1{
+            loongson,pinmux = <&gpa5 1 1>;
+            loongson,pinmux-funcsel = <3>;
+        };
+    };
+
+    atim_ch2_pin: atim-ch2-pin{
+        atim_ch2_pin_m0: atim-ch2-pin-m0{
+            loongson,pinmux = <&gpa1 13 13>;
+            loongson,pinmux-funcsel = <2>;
+        };
+        atim_ch2_pin_m1: atim-ch2-pin-m1{
+            loongson,pinmux = <&gpa5 2 2>;
+            loongson,pinmux-funcsel = <3>;
+        };
+    };
+
+    atim_ch3_pin: atim-ch3-pin{
+        atim_ch3_pin_m0: atim-ch3-pin-m0{
+            loongson,pinmux = <&gpa1 14 14>;
+            loongson,pinmux-funcsel = <2>;
+        };
+        atim_ch3_pin_m1: atim-ch3-pin-m1{
+            loongson,pinmux = <&gpa5 3 3>;
+            loongson,pinmux-funcsel = <3>;
+        };
+    };
+
+    atim_ch4_pin: atim-ch4-pin{
+        atim_ch4_pin_m0: atim-ch4-pin-m0{
+            loongson,pinmux = <&gpa4 12 12>;
+            loongson,pinmux-funcsel = <1>;
+        };
+        atim_ch4_pin_m1: atim-ch4-pin-m1{
+            loongson,pinmux = <&gpa6 5 5>;
+            loongson,pinmux-funcsel = <1>;
+        };
+    };
+
+    atim_ch1n_pin: atim-ch1n-pin{
+        atim_ch1n_pin_m0: atim-ch1n-pin-m0{
+            loongson,pinmux = <&gpa1 15 15>;
+            loongson,pinmux-funcsel = <2>;
+        };
+        atim_ch1n_pin_m1: atim-ch1n-pin-m1{
+            loongson,pinmux = <&gpa5 4 4>;
+            loongson,pinmux-funcsel = <3>;
+        };
+    };
+
+    atim_ch2n_pin: atim-ch2n-pin{
+        atim_ch2n_pin_m0: atim-ch2n-pin-m0{
+            loongson,pinmux = <&gpa2 0 0>;
+            loongson,pinmux-funcsel = <2>;
+        };
+        atim_ch2n_pin_m1: atim-ch2n-pin-m1{
+            loongson,pinmux = <&gpa5 5 5>;
+            loongson,pinmux-funcsel = <3>;
+        };
+    };
+
+    atim_ch3n_pin: atim-ch3n-pin{
+        atim_ch3n_pin_m0: atim-ch3n-pin-m0{
+            loongson,pinmux = <&gpa2 1 1>;
+            loongson,pinmux-funcsel = <2>;
+        };
+        atim_ch3n_pin_m1: atim-ch3n-pin-m1{
+            loongson,pinmux = <&gpa5 6 6>;
+            loongson,pinmux-funcsel = <3>;
+        };
+    };
+
+    gtim_ch1_pin: gtim-ch1-pin{
+        gtim_ch1_pin_m0: gtim-ch1-pin-m0{
+            loongson,pinmux = <&gpa2 2 2>;
+            loongson,pinmux-funcsel = <2>;
+        };
+        gtim_ch1_pin_m1: gtim-ch1-pin-m1{
+            loongson,pinmux = <&gpa5 7 7>;
+            loongson,pinmux-funcsel = <3>;
+        };
+    };
+
+    gtim_ch2_pin: gtim-ch2-pin{
+        gtim_ch2_pin_m0: gtim-ch2-pin-m0{
+            loongson,pinmux = <&gpa2 3 3>;
+            loongson,pinmux-funcsel = <2>;
+        };
+        gtim_ch2_pin_m1: gtim-ch2-pin-m1{
+            loongson,pinmux = <&gpa5 8 8>;
+            loongson,pinmux-funcsel = <3>;
+        };
+    };
+
+    gtim_ch3_pin: gtim-ch3-pin{
+        gtim_ch3_pin_m0: gtim-ch3-pin-m0{
+            loongson,pinmux = <&gpa2 4 4>;
+            loongson,pinmux-funcsel = <2>;
+        };
+        gtim_ch3_pin_m1: gtim-ch3-pin-m1{
+            loongson,pinmux = <&gpa5 9 9>;
+            loongson,pinmux-funcsel = <3>;
+        };
+    };
+
+    gtim_ch4_pin: gtim-ch4-pin{
+        gtim_ch4_pin_m0: gtim-ch4-pin-m0{
+            loongson,pinmux = <&gpa4 13 13>;
+            loongson,pinmux-funcsel = <1>;
+        };
+        gtim_ch4_pin_m1: gtim-ch4-pin-m1{
+            loongson,pinmux = <&gpa6 6 6>;
+            loongson,pinmux-funcsel = <1>;
+        };
+    };
+
+
+ i2c0_pin: i2c0-pin{
+  i2c0_mux_m0: i2c0-mux-m0{
+   loongson,pinmux = <&gpa3 0 1>;
+   loongson,pinmux-funcsel = <3>;
+  };
+  i2c0_mux_m1: i2c0-mux-m1{
+   loongson,pinmux = <&gpa3 12 13>;
+   loongson,pinmux-funcsel = <1>;
+  };
+ };
+
+ i2c1_pin: i2c1-pin{
+  i2c1_mux_m0: i2c1-mux-m0{
+   loongson,pinmux = <&gpa3 2 3>;
+   loongson,pinmux-funcsel = <3>;
+  };
+  i2c1_mux_m1: i2c1-mux-m1{
+   loongson,pinmux = <&gpa3 14 15>;
+   loongson,pinmux-funcsel = <1>;
+  };
+
+ };
+
+ i2c2_pin: i2c2-pin{
+  i2c2_mux_m0:i2c2-mux-m0{
+   loongson,pinmux = <&gpa3 4 5>;
+   loongson,pinmux-funcsel = <3>;
+  };
+  i2c2_mux_m1: i2c2-mux-m1{
+   loongson,pinmux = <&gpa5 2 3>;
+   loongson,pinmux-funcsel = <2>;
+  };
+ };
+
+ i2c3_pin: i2c3-pin{
+     i2c3_mux_m0: i2c3-mux-m0{
+   loongson,pinmux = <&gpa3 6 7>;
+   loongson,pinmux-funcsel = <3>;
+  };
+  i2c3_mux_m1: i2c3-mux-m1{
+   loongson,pinmux = <&gpa5 4 5>;
+   loongson,pinmux-funcsel = <2>;
+   };
+ };
+
+ uart0_pin: uart0-pin {
+  uart0_2bit_m0: uart0-2bit-m0{
+   loongson,pinmux = <&gpa2 8 9>;
+   loongson,pinmux-funcsel = <3>;
+  };
+  uart0_2bit_m1: uart0-2bit-m1{
+   loongson,pinmux = <&gpa5 12 13>;
+   loongson,pinmux-funcsel = <2>;
+  };
+
+  uart0_8bit_f0: uart0-8bit-f0{
+   loongson,pinmux = <&gpa3 12 15>;
+   loongson,pinmux-funcsel = <2>;
+  };
+  uart0_8bit_f1: uart0-8bit-f1{
+   loongson,pinmux = <&gpa4 0 1>;
+   loongson,pinmux-funcsel = <2>;
+  };
+
+ };
+
+ uart1_pin: uart1-pin {
+  uart1_2bit_m0: uart1-2bit-m0{
+   loongson,pinmux = <&gpa2 10 11>;
+   loongson,pinmux-funcsel = <3>;
+  };
+  uart1_2bit_m1: uart1-2bit-m1{
+   loongson,pinmux = <&gpa5 14 15>;
+   loongson,pinmux-funcsel = <2>;
+  };
+
+  uart1_8bit: uart1-8bit{
+   loongson,pinmux = <&gpa4 2 7>;
+   loongson,pinmux-funcsel = <2>;
+  };
+ };
+
+ uart2_pin: uart2-pin {
+  uart2_2bit_m0: uart2-2bit-m0{
+   loongson,pinmux = <&gpa2 12 13>;
+   loongson,pinmux-funcsel = <3>;
+  };
+  uart2_2bit_m1: uart0-2bit-m1{
+   loongson,pinmux = <&gpa6 0 1>;
+   loongson,pinmux-funcsel = <2>;
+  };
+ };
+
+ uart3_pin: uart3-pin {
+  uart3_2bit_m0: uart3-2bit-m0{
+   loongson,pinmux = <&gpa2 14 15>;
+   loongson,pinmux-funcsel = <3>;
+  };
+  uart3_2bit_m1: uart3-2bit-m1{
+   loongson,pinmux = <&gpa6 2 3>;
+   loongson,pinmux-funcsel = <2>;
+  };
+ };
+
+ uart4_pin: uart4-pin {
+  uart4_2bit: uart4-2bit{
+   loongson,pinmux = <&gpa3 14 15>;
+   loongson,pinmux-funcsel = <2>;
+  };
+ };
+
+ uart5_pin: uart5-pin {
+  loongson,pinmux = <&gpa4 0 1>;
+  loongson,pinmux-funcsel = <2>;
+ };
+
+ uart6_pin: uart6-pin {
+   loongson,pinmux = <&gpa3 12 13>;
+   loongson,pinmux-funcsel = <2>;
+ };
+ uart7_pin: uart7-pin {
+   loongson,pinmux = <&gpa4 4 5>;
+   loongson,pinmux-funcsel = <2>;
+ };
+
+ uart8_pin: uart8-pin {
+   loongson,pinmux = <&gpa4 6 7>;
+   loongson,pinmux-funcsel = <2>;
+ };
+ uart7_pin: uart7-pin {
+   loongson,pinmux = <&gpa4 4 5>;
+   loongson,pinmux-funcsel = <2>;
+ };
+
+ uart8_pin: uart8-pin {
+   loongson,pinmux = <&gpa4 6 7>;
+   loongson,pinmux-funcsel = <2>;
+ };
+
+ uart9_pin: uart9-pin {
+   loongson,pinmux = <&gpa4 2 3>;
+   loongson,pinmux-funcsel = <2>;
+ };
+
+ can0_pin: can0-pin{
+  can0_mux_m0: can0-mux-m0{
+   loongson,pinmux = <&gpa4 4 5>;
+   loongson,pinmux-funcsel = <3>;
+  };
+  can0_mux_m1: can0-mux-m1{
+   loongson,pinmux = <&gpa5 12 13>;
+   loongson,pinmux-funcsel = <1>;
+  };
+ };
+
+ can1_pin: can1-pin{
+  can1_mux_m0: can1-mux-m0{
+   loongson,pinmux = <&gpa4 6 7>;
+   loongson,pinmux-funcsel = <3>;
+  };
+  can1_mux_m1: can1-mux-m1{
+   loongson,pinmux = <&gpa5 14 15>;
+   loongson,pinmux-funcsel = <1>;
+  };
+
+ };
+
+ can2_pin: can2-pin{
+  can2_mux_m0: can2-mux-m0{
+   loongson,pinmux = <&gpa4 8 9>;
+   loongson,pinmux-funcsel = <3>;
+  };
+  can2_mux_m1: can2-mux-m1{
+   loongson,pinmux = <&gpa6 0 1>;
+   loongson,pinmux-funcsel = <1>;
+  };
+
+ };
+
+ can3_pin: can3-pin{
+  can3_mux_m0: can3-mux-m0{
+   loongson,pinmux = <&gpa4 10 11>;
+   loongson,pinmux-funcsel = <3>;
+  };
+  can3_mux_m1: can3-mux-m1{
+   loongson,pinmux = <&gpa6 2 3>;
+   loongson,pinmux-funcsel = <1>;
+  };
+
+ };
+
+ i2s_pin: i2s-pin{
+  i2s_pin_f0: i2s-pin-f0{
+   loongson,pinmux = <&gpa4 12 15>;
+   loongson,pinmux-funcsel = <3>;
+  };
+  i2s_pin_f1: i2s-pin-f1{
+   loongson,pinmux = <&gpa5 0 0>;
+   loongson,pinmux-funcsel = <3>;
+  };
+ };
+
+ sdio0_pin: sdio0-pin{
+  sdio0_pin_f0: sdio0-pin-f0{
+    loongson,pinmux = <&gpa5 10 15>;
+    loongson,pinmux-funcsel = <3>;
+  };
+  sdio0_pin_f1: sdio0-pin-f1{
+    loongson,pinmux = <&gpa6 0 3>;
+    loongson,pinmux-funcsel = <3>;
+  };
+ };
+
+ sdio1_pin: sdio1-pin{
+  sdio1_6bit: sdio1-6bit{
+   loongson,pinmux = <&gpa6 4 9>;
+   loongson,pinmux-funcsel = <3>;
+  };
+  sdio1_10bit_m0: sdio1-10bit-m0{
+   loongson,pinmux = <&gpa4 8 11>;
+   loongson,pinmux-funcsel = <1>;
+  };
+  sdio1_10bit_m1: sdio1-10bit-m1{
+   loongson,pinmux = <&gpa5 4 7>;
+   loongson,pinmux-funcsel = <1>;
+  };
+ };
+
+ lio_pin: lio-pin{
+  lio_27bit_f0: lio-27bit-f0{
+   loongson,pinmux = <&gpa0 1 15>;
+   loongson,pinmux-funcsel = <2>;
+  };
+  lio_27bit_f1: lio-27bit-f1{
+   loongson,pinmux = <&gpa1 0 11>;
+   loongson,pinmux-funcsel = <2>;
+  };
+  lio_data_8bit: lio-data-8bit{
+   loongson,pinmux = <&gpa2 8 15>;
+   loongson,pinmux-funcsel = <2>;
+  };
+  lio_data_16bit: lio-data_16bit{
+   loongson,pinmux = <&gpa3 0 7>;
+   loongson,pinmux-funcsel = <2>;
+  };
+ };
+ touchscreen_pin: touchscreen-pin{
+  touchscreen_m0: touchscreen-m0{
+   loongson,pinmux = <&gpa3 4 5>;
+   loongson,pinmux-funcsel = <0>;
+  };
+  touchscreen_m1: touchscreen-m1{
+   loongson,pinmux = <&gpa6 7 8>;
+   loongson,pinmux-funcsel = <0>;
+  };
+ };
+
+
+ soft_spi0_pin: soft_spi0_pin{
+  loongson,pinmux = <&gpa2 12 13>, <&gpa0 13 14>;
+  loongson,pinmux-funcsel = <0>;
+ };
+
+};
+# 685 "arch/loongarch/boot/dts/loongson/loongson_2k0300.dtsi" 2
+# 2 "arch/loongarch/boot/dts/loongson/seekfree_smart_car_pai_99.dts" 2
+
+/ {
+    memory {
+        name = "memory";
+        device_type = "memory";
+        reg = <0 0x00200000 0 0x0ee00000
+             0 0x90000000 0 0x10000000>;
+    };
+
+
+    zf_driver_gpio_beep{
+        status = "okay";
+        compatible = "seekfree,gpio_out";
+        gpios = <&gpa0 12 0>;
+ };
+
+
+
+    zf_driver_gpio_key_0{
+        status = "okay";
+        compatible = "seekfree,gpio_in";
+        gpios = <&gpa0 13 0>;
+ };
+
+    zf_driver_gpio_key_1{
+        status = "okay";
+        compatible = "seekfree,gpio_in";
+        gpios = <&gpa0 14 0>;
+ };
+
+    zf_driver_gpio_key_2{
+        status = "okay";
+        compatible = "seekfree,gpio_in";
+        gpios = <&gpa0 15 0>;
+ };
+
+    zf_driver_gpio_key_3{
+        status = "okay";
+        compatible = "seekfree,gpio_in";
+        gpios = <&gpa1 0 0>;
+ };
+
+
+
+    zf_driver_gpio_switch_0{
+        status = "okay";
+        compatible = "seekfree,gpio_in";
+        gpios = <&gpa1 4 0>;
+ };
+
+    zf_driver_gpio_switch_1{
+        status = "okay";
+        compatible = "seekfree,gpio_in";
+        gpios = <&gpa1 5 0>;
+ };
+
+
+
+
+
+
+    zf_driver_gpio_motor_1{
+        status = "okay";
+        compatible = "seekfree,gpio_out";
+        gpios = <&gpa4 9 0>;
+ };
+
+
+
+
+
+    zf_driver_gpio_motor_2{
+        status = "okay";
+        compatible = "seekfree,gpio_out";
+        gpios = <&gpa4 8 0>;
+ };
+
+
+
+
+    spi3 {
+        status = "okay";
+        compatible = "spi-gpio";
+
+        gpio-sck = <&gpa1 6 0>;
+        gpio-mosi = <&gpa1 7 0>;
+  gpio-miso = <&gpa1 8 0>;
+  cs-gpios = <&gpa1 9 0>;
+
+        #address-cells = <1>;
+  #size-cells = <0>;
+  num-chipselects = <1>;
+
+        imu: imu@0 {
+            status = "okay";
+            gpio-controller;
+      compatible = "seekfree,imu";
+            spi-max-frequency = <10000000>;
+   reg = <0>;
+  };
+
+ };
+
+
+
+    zf_device_pwm_servo{
+        compatible = "seekfree,pwm";
+        pwms = <&pwm_atim 5 1000000>;
+        status = "okay";
+        freq = <300>;
+        duty = <0>;
+        duty_max = <10000>;
+    };
+
+
+
+    zf_device_pwm_esc_1{
+        compatible = "seekfree,pwm";
+        pwms = <&pwm_gtim 1 1000000>;
+        status = "okay";
+        freq = <50>;
+        duty = <0>;
+        duty_max = <10000>;
+    };
+
+    zf_device_pwm_esc_2{
+        compatible = "seekfree,pwm";
+        pwms = <&pwm_gtim 2 1000000>;
+        status = "okay";
+        freq = <50>;
+        duty = <0>;
+        duty_max = <10000>;
+    };
+
+
+
+    zf_device_pwm_motor_1{
+        compatible = "seekfree,pwm";
+        pwms = <&pwm1 0 1000000>;
+        status = "okay";
+        freq = <17000>;
+        duty = <0>;
+        duty_max = <10000>;
+    };
+
+    zf_device_pwm_motor_2{
+        compatible = "seekfree,pwm";
+        pwms = <&pwm2 0 1000000>;
+        status = "okay";
+        freq = <17000>;
+        duty = <0>;
+        duty_max = <10000>;
+    };
+
+
+
+    st7789v_blk: st7789v-blk
+    {
+        compatible = "gpio-backlight";
+        status = "okay";
+        gpios = <&gpa4 11 0>;
+        default-on;
+    };
+
+};
+
+
+&cpu_uart0{
+    status = "okay";
+    pinctrl-names = "default";
+    pinctrl-0 = <&uart0_2bit_m0>;
+    auto-flow-control = <1>;
+};
+
+&cpu_uart1{
+    status = "okay";
+    pinctrl-names = "default";
+    pinctrl-0 = <&uart1_2bit_m0>;
+    auto-flow-control = <1>;
+};
+
+&gmac0{
+    status = "okay";
+    pinctrl-names = "default";
+    pinctrl-0 = <&gmac0_12bit_f0>, <&gmac0_12bit_f1>;
+};
+
+&emmc0{
+    status = "okay";
+    pinctrl-names = "default";
+    pinctrl-0 = <&sdio0_pin_f0>, <&sdio0_pin_f1>;
+};
+&sdio1{
+    status = "okay";
+    pinctrl-names = "default";
+    pinctrl-0 = <&sdio1_6bit>;
+};
+
+
+&spi0{
+    status = "okay";
+    pinctrl-names = "default";
+    pinctrl-0 = <&spi0_6bit_f0>,<&spi0_6bit_f1>;
+
+    norflash@0 {
+       reg = <0>;
+       spi-rx-bus-width = <4>;
+       spi-max-frequency = <25000000>;
+       #address-cells = <1>;
+       #size-cells = <1>;
+       partitions {
+           compatible = "fixed-partitions";
+           #address-cells = <1>;
+           #size-cells = <1>;
+
+           boot@0 {
+               label = "boot";
+               reg = <0x0000000 0x100000>;
+
+           };
+
+           kernel@100000 {
+               label = "kernel";
+               reg = <0x100000 0x600000>;
+           };
+
+           rootfs@700000 {
+               label = "rootfs";
+               reg = <0x700000 0x1000000>;
+           };
+       };
+
+    };
+};
+
+
+
+
+
+&spi1{
+    status = "okay";
+    pinctrl-names = "default";
+    pinctrl-0 = <&spi1_4bit>;
+
+    st7789v:st7789v@0{
+        status = "okay";
+        compatible = "sitronix,st7789v";
+        reg = <0>;
+
+        spi-max-frequency =<50000000>;
+        spi-cpol;
+        spi-cpha;
+        rgb;
+        rotate = <0>;
+        buswidth = <8>;
+        fps = <30>;
+
+        dc-gpios = <&gpa1 10 0>;
+        reset-gpios = <&gpa4 10 0>;
+        backlight = <&st7789v_blk>;
+
+        width = <240>;
+        height= <320>;
+
+        debug = <0x0>;
+    };
+};
+
+
+
+
+
+&pwm0{
+    status = "okay";
+    pinctrl-names = "default";
+    pinctrl-0 = <&pwm0_mux_m0>;
+    clock-frequency = <100000000>;
+    compatible = "seekfree,encoder";
+    encoder-dir-gpio = <&gpa3 3 0>;
+    dev-name = "zf_encoder_1";
+};
+
+
+
+
+&pwm3{
+    status = "okay";
+    pinctrl-names = "default";
+    pinctrl-0 = <&pwm3_mux_m0>;
+    clock-frequency = <100000000>;
+    reg = <0 0x1611b030 0 0x10>;
+    compatible = "seekfree,encoder";
+    encoder-dir-gpio = <&gpa3 2 0>;
+    dev-name = "zf_encoder_2";
+};
+
+
+
+
+
+
+&pwm1{
+    status = "okay";
+    pinctrl-names = "default";
+    pinctrl-0 = <&pwm1_mux_m0>;
+    clock-frequency = <100000000>;
+    compatible = "loongson,ls300-pwm";
+};
+
+
+
+
+&pwm2{
+    status = "okay";
+    pinctrl-names = "default";
+    pinctrl-0 = <&pwm2_mux_m0>;
+    clock-frequency = <100000000>;
+    compatible = "loongson,ls300-pwm";
+};
+
+
+
+
+
+&pwm_atim{
+    status = "okay";
+    compatible = "loongson,ls300-pwm-atim";
+    pinctrl-names = "default";
+    pinctrl-0 = <&atim_ch3n_pin_m1>;
+};
+
+
+
+
+&pwm_gtim{
+    status = "okay";
+    compatible = "loongson,ls300-pwm-gtim";
+    pinctrl-names = "default";
+    pinctrl-0 = <&gtim_ch2_pin_m1>, <&gtim_ch3_pin_m1>;
+};
+
+
+
+&adc{
+ status = "okay";
+};

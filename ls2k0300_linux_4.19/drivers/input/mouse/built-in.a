@@ -1,0 +1,26 @@
+!<thin>
+//                                              154       `
+psmouse-base.o/
+synaptics.o/
+focaltech.o/
+alps.o/
+byd.o/
+elantech.o/
+logips2pp.o/
+sentelic.o/
+trackpoint.o/
+cypress_ps2.o/
+pixart_ps2.o/
+psmouse-smbus.o/
+/0              0           0     0     644     108440    `
+/16             0           0     0     644     80392     `
+/29             0           0     0     644     15688     `
+/42             0           0     0     644     113824    `
+/50             0           0     0     644     13760     `
+/57             0           0     0     644     80680     `
+/69             0           0     0     644     18040     `
+/82             0           0     0     644     42576     `
+/94             0           0     0     644     42888     `
+/108            0           0     0     644     23088     `
+/123            0           0     0     644     16072     `
+/137           /0           0     0     644     20464     `

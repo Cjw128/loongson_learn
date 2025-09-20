@@ -1,0 +1,2 @@
+kernel/drivers/net/can/ls_can/lscan.ko
+kernel/drivers/net/can/ls_can/lscan_platform.ko

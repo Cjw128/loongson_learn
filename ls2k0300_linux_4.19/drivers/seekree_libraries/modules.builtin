@@ -1,0 +1,6 @@
+kernel/drivers/seekree_libraries/zf_device_imu.ko
+kernel/drivers/seekree_libraries/zf_driver_atim.ko
+kernel/drivers/seekree_libraries/zf_driver_encoder.ko
+kernel/drivers/seekree_libraries/zf_driver_gpio.ko
+kernel/drivers/seekree_libraries/zf_driver_gtim.ko
+kernel/drivers/seekree_libraries/zf_driver_pwm.ko

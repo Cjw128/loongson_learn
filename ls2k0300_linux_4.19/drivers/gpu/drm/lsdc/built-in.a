@@ -1,0 +1,25 @@
+!<thin>
+//                                              162       `
+lsdc_drv.o/
+lsdc_irq.o/
+lsdc_crtc.o/
+lsdc_plane.o/
+lsdc_encoder.o/
+lsdc_connector.o/
+lsdc_bridge.o/
+lsdc_pll.o/
+lsdc_i2c.o/
+lsdc_platform_drv.o/
+lsdc_pci_drv.o/
+
+/0              0           0     0     644     49632     `
+/12             0           0     0     644     6240      `
+/24             0           0     0     644     43512     `
+/37             0           0     0     644     49528     `
+/51             0           0     0     644     7016      `
+/67             0           0     0     644     29600     `
+/85             0           0     0     644     8808      `
+/100            0           0     0     644     34992     `
+/112            0           0     0     644     12432     `
+/124            0           0     0     644     14552     `
+/145            0           0     0     644     15744     `

@@ -609,6 +609,54 @@ home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_driver/zf_driver_udp.cpp.s
 .PHONY : home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_driver/zf_driver_udp.cpp.s
 
+home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/PID.o: home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/PID.cpp.o
+.PHONY : home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/PID.o
+
+# target to build an object file
+home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/PID.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/PID.cpp.o
+.PHONY : home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/PID.cpp.o
+
+home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/PID.i: home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/PID.cpp.i
+.PHONY : home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/PID.i
+
+# target to preprocess a source file
+home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/PID.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/PID.cpp.i
+.PHONY : home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/PID.cpp.i
+
+home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/PID.s: home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/PID.cpp.s
+.PHONY : home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/PID.s
+
+# target to generate assembly for a file
+home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/PID.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/PID.cpp.s
+.PHONY : home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/PID.cpp.s
+
+home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/control.o: home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/control.cpp.o
+.PHONY : home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/control.o
+
+# target to build an object file
+home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/control.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/control.cpp.o
+.PHONY : home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/control.cpp.o
+
+home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/control.i: home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/control.cpp.i
+.PHONY : home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/control.i
+
+# target to preprocess a source file
+home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/control.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/control.cpp.i
+.PHONY : home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/control.cpp.i
+
+home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/control.s: home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/control.cpp.s
+.PHONY : home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/control.s
+
+# target to generate assembly for a file
+home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/control.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/control.cpp.s
+.PHONY : home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/control.cpp.s
+
 home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/encoder.o: home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/encoder.cpp.o
 .PHONY : home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/encoder.o
 
@@ -632,6 +680,30 @@ home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/co
 home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/encoder.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/encoder.cpp.s
 .PHONY : home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/encoder.cpp.s
+
+home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/flash.o: home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/flash.cpp.o
+.PHONY : home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/flash.o
+
+# target to build an object file
+home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/flash.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/flash.cpp.o
+.PHONY : home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/flash.cpp.o
+
+home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/flash.i: home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/flash.cpp.i
+.PHONY : home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/flash.i
+
+# target to preprocess a source file
+home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/flash.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/flash.cpp.i
+.PHONY : home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/flash.cpp.i
+
+home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/flash.s: home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/flash.cpp.s
+.PHONY : home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/flash.s
+
+# target to generate assembly for a file
+home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/flash.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/flash.cpp.s
+.PHONY : home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/flash.cpp.s
 
 home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/image.o: home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/image.cpp.o
 .PHONY : home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/image.o
@@ -704,6 +776,30 @@ home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/co
 home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/key.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/key.cpp.s
 .PHONY : home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/key.cpp.s
+
+home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/menu.o: home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/menu.cpp.o
+.PHONY : home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/menu.o
+
+# target to build an object file
+home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/menu.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/menu.cpp.o
+.PHONY : home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/menu.cpp.o
+
+home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/menu.i: home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/menu.cpp.i
+.PHONY : home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/menu.i
+
+# target to preprocess a source file
+home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/menu.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/menu.cpp.i
+.PHONY : home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/menu.cpp.i
+
+home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/menu.s: home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/menu.cpp.s
+.PHONY : home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/menu.s
+
+# target to generate assembly for a file
+home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/menu.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/project.dir/build.make CMakeFiles/project.dir/home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/menu.cpp.s
+.PHONY : home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/menu.cpp.s
 
 home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/motor.o: home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/motor.cpp.o
 .PHONY : home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/motor.o
@@ -822,9 +918,18 @@ help:
 	@echo "... home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_driver/zf_driver_udp.o"
 	@echo "... home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_driver/zf_driver_udp.i"
 	@echo "... home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/libraries/zf_driver/zf_driver_udp.s"
+	@echo "... home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/PID.o"
+	@echo "... home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/PID.i"
+	@echo "... home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/PID.s"
+	@echo "... home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/control.o"
+	@echo "... home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/control.i"
+	@echo "... home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/control.s"
 	@echo "... home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/encoder.o"
 	@echo "... home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/encoder.i"
 	@echo "... home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/encoder.s"
+	@echo "... home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/flash.o"
+	@echo "... home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/flash.i"
+	@echo "... home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/flash.s"
 	@echo "... home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/image.o"
 	@echo "... home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/image.i"
 	@echo "... home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/image.s"
@@ -834,6 +939,9 @@ help:
 	@echo "... home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/key.o"
 	@echo "... home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/key.i"
 	@echo "... home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/key.s"
+	@echo "... home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/menu.o"
+	@echo "... home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/menu.i"
+	@echo "... home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/menu.s"
 	@echo "... home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/motor.o"
 	@echo "... home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/motor.i"
 	@echo "... home/cjw/桌面/LS2K0300_Library/Seekfree_LS2K0300_Opensource_Library/project/code/motor.s"

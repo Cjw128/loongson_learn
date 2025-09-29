@@ -79,6 +79,18 @@ void pit_callback()
         imu_gyro_x = imu_get_raw(imu_file_path[GYRO_X_RAW]);
         imu_gyro_y = imu_get_raw(imu_file_path[GYRO_Y_RAW]);
         imu_gyro_z = imu_get_raw(imu_file_path[GYRO_Z_RAW]);
+
+        imu_gyro_x = imu_gyro_x - 1;
+        imu_gyro_y = imu_gyro_y + 9;
+        if (abs(imu_gyro_x)<5){
+            imu_gyro_x = 0;
+        }
+        if (abs(imu_gyro_y)<5){
+            imu_gyro_y = 0;
+        }
+        if (abs(imu_gyro_z)<5){
+            imu_gyro_z = 0;
+        }
     }
     else if(DEV_IMU963RA == imu_type)
     {
@@ -100,6 +112,9 @@ void pit_callback()
 int main(int, char**) 
 {
 
+    freopen("/dev/ttyS0", "r+", stdin);
+    freopen("/dev/ttyS0", "r+", stdout);
+
     imu_get_dev_info();
     
     if(DEV_IMU660RA == imu_type)
@@ -119,7 +134,7 @@ int main(int, char**)
         printf("NO FIND IMU DEV\r\n");
         return -1;
     }
-    
+
     // // 创建一个定时器10ms周期，回调函数为pit_callback
     // pit_ms_init(10, pit_callback);
 
@@ -132,13 +147,7 @@ int main(int, char**)
 
         if(DEV_IMU660RA == imu_type || DEV_IMU660RB == imu_type)
         {
-            printf("imu_acc_x  = %d\r\n", imu_acc_x);
-            printf("imu_acc_y  = %d\r\n", imu_acc_y);
-            printf("imu_acc_z  = %d\r\n", imu_acc_z);
-    
-            printf("imu_gyro_x = %d\r\n", imu_gyro_x);
-            printf("imu_gyro_y = %d\r\n", imu_gyro_y);
-            printf("imu_gyro_z = %d\r\n", imu_gyro_z);
+           printf("%d,%d,%d,%d,%d,%d\r\n", imu_acc_x, imu_acc_y, imu_acc_z, imu_gyro_x, imu_gyro_y, imu_gyro_z);
         }
         else if(DEV_IMU963RA == imu_type)
         {

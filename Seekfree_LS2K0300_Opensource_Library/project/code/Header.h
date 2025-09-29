@@ -8,5 +8,8 @@
 #include "isr.h"
 #include "image.h"
 #include "flash.h"
+#include "PID.h"
+#include "control.h"
+#include "menu.h"
 /*************************************用户头文件*************************************/
 #endif

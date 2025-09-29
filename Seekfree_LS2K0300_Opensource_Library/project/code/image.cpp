@@ -3,25 +3,93 @@
 #include "Header.h"
 #include "image.h"
 
-#include <opencv2/imgproc/imgproc.hpp>  // for cv::cvtColor
-#include <opencv2/highgui/highgui.hpp> // for cv::VideoCapture
-#include <opencv2/opencv.hpp>
+// 已移除对 OpenCV 的直接依赖（保留在底层摄像头驱动文件中）。
 
 #include <iostream> // for std::cerr
 #include <fstream>  // for std::ofstream
 #include <iostream>
-#include <opencv2/opencv.hpp>
 #include <thread>
 #include <chrono>
 #include <atomic>
 
-using namespace cv;
-
 
 /***************************图像定义***************************/
 extern uint8_t *rgay_image;                 // 原图指针
+// 运行期图像参数变量定义
+volatile int g_img_display_mode = IMG_MODE_GRAY;
+volatile int g_crop_top = 0;
+volatile int g_crop_bottom = 0;
+volatile int g_crop_left = 0;
+volatile int g_crop_right = 0;
 
+#ifndef IMAGE_PARAM_STORE_PATH
+#define IMAGE_PARAM_STORE_PATH "/home/root/image_cfg.txt"
+#endif
 /***************************图像定义***************************/
+
+//------------------------------------------------------------------------------------------------
+//函数名称    image_param_load
+//参数说明    void
+//返回参数    void
+//使用实例    image_param_load();    // 加载图像显示模式与裁切参数
+//备注信息    若配置文件不存在或格式错误则使用默认值(灰度模式+零裁切)
+//------------------------------------------------------------------------------------------------
+void image_param_load(void)
+{
+	FILE *fp = fopen(IMAGE_PARAM_STORE_PATH, "r");
+	if(!fp){
+		printf("[IMG] no image param file, using defaults\n");
+		return;
+	}
+	int mode, t,b,l,r;
+	if(5==fscanf(fp, "%d %d %d %d %d", &mode,&t,&b,&l,&r)){
+		g_img_display_mode = (mode==IMG_MODE_TRACK)?IMG_MODE_TRACK:IMG_MODE_GRAY;
+		g_crop_top=t; g_crop_bottom=b; g_crop_left=l; g_crop_right=r;
+	}else{
+		printf("[IMG] image param file format error\n");
+	}
+	fclose(fp);
+}
+
+//------------------------------------------------------------------------------------------------
+//函数名称    image_param_save
+//参数说明    void
+//返回参数    void
+//使用实例    image_param_save();    // 保存当前图像显示模式与裁切参数
+//备注信息    写入 IMAGE_PARAM_STORE_PATH，失败会打印错误
+//------------------------------------------------------------------------------------------------
+void image_param_save(void)
+{
+	FILE *fp = fopen(IMAGE_PARAM_STORE_PATH, "w");
+	if(!fp){ printf("[IMG] save failed %s\n", IMAGE_PARAM_STORE_PATH); return; }
+	fprintf(fp, "%d %d %d %d %d\n", g_img_display_mode, g_crop_top, g_crop_bottom, g_crop_left, g_crop_right);
+	fclose(fp);
+	printf("[IMG] saved to %s\n", IMAGE_PARAM_STORE_PATH);
+}
+
+//------------------------------------------------------------------------------------------------
+//函数名称    image_apply_crops
+//参数说明    int *x：返回 ROI 起始 x
+//           int *y：返回 ROI 起始 y
+//           int *w：返回 ROI 宽度
+//           int *h：返回 ROI 高度
+//返回参数    void
+//使用实例    image_apply_crops(&rx,&ry,&rw,&rh);    // 依据当前裁切变量计算合法 ROI
+//备注信息    自动裁剪并防止越界；若裁切过度会自动压缩使宽高保持最小安全范围
+//------------------------------------------------------------------------------------------------
+// 根据运行期裁切变量计算 ROI（确保合法）
+void image_apply_crops(int *x,int *y,int *w,int *h)
+{
+	int top = g_crop_top; if(top < 0) top = 0; if(top > VIS_ORI_H-10) top = VIS_ORI_H-10;
+	int bottom = g_crop_bottom; if(bottom < 0) bottom = 0; if(bottom > VIS_ORI_H-10) bottom = VIS_ORI_H-10;
+	int left = g_crop_left; if(left < 0) left = 0; if(left > VIS_ORI_W-10) left = VIS_ORI_W-10;
+	int right = g_crop_right; if(right < 0) right = 0; if(right > VIS_ORI_W-10) right = VIS_ORI_W-10;
+	if(top + bottom > VIS_ORI_H-5){ bottom = (VIS_ORI_H-5) - top; if(bottom<0) bottom=0; }
+	if(left + right > VIS_ORI_W-5){ right = (VIS_ORI_W-5) - left; if(right<0) right=0; }
+	*x = left; *y = top; *w = VIS_ORI_W - left - right; *h = VIS_ORI_H - top - bottom;
+}
+
+
 
 //------------------------------------------------------------------------------------------------
 //函数名称    my_abs
@@ -49,12 +117,12 @@ int16 limit_a_b(int16 x,int a,int b){
 }
 
 //------------------------------------------------------------------------------------------------
-//函数名称    camera_init
-//参数说明    void
-//返回参数    void
-//使用实例    camera_init();    // 初始化摄像头
+//函数名称    vis_camera_init
+//参数说明    const char* device：V4L2 设备节点 (如 /dev/video0)
+//返回参数    int：0-成功  非0-失败
+//使用实例    if(vis_camera_init("/dev/video0")){ /* 失败处理 */ }
+//备注信息    封装底层 uvc_camera_init，失败打印错误信息
 //------------------------------------------------------------------------------------------------
-// 摄像头初始化，返回0成功，非0失败
 int vis_camera_init(const char* device)
 {
 	int ret = uvc_camera_init(device);
@@ -68,16 +136,39 @@ int vis_camera_init(const char* device)
 //函数名称    vis_otsu
 //参数说明    void
 //返回参数    void
-//使用实例    vis_otsu();    // 大津法二值化
-//备注信息    加入了图像裁切功能，得到的大津法阈值、二值化效果针对的是有效图区域。
+//使用实例    vis_otsu();    // 大津法二值化（纯C实现）
+//备注信息    基于运行期裁切参数计算 ROI，在该区域内执行 Otsu 阈值并就地写回。
 //------------------------------------------------------------------------------------------------
 void vis_otsu(){
-    Mat src(VIS_ORI_H, VIS_ORI_W, CV_8UC1, rgay_image);
-    Rect roi(VIS_LEFT_CUT, VIS_TOP_CUT, VIS_W, VIS_H);
-    Mat cropped = src(roi); // 裁剪后区域
-    Mat binary;
-    threshold(cropped, binary, 0, 255, THRESH_BINARY | THRESH_OTSU);
-    memcpy(rgay_image + VIS_TOP_CUT * VIS_ORI_W + VIS_LEFT_CUT, binary.data, VIS_SIZE);
+	if(!rgay_image) return;
+	int rx, ry, rw, rh; image_apply_crops(&rx,&ry,&rw,&rh);
+	if(rw <= 0 || rh <= 0) return;
+	unsigned long hist[256];
+	memset(hist,0,sizeof(hist));
+	// 统计直方图
+	for(int j=0;j<rh;j++){
+		const uint8_t *row = rgay_image + (ry + j) * VIS_ORI_W + rx;
+		for(int i=0;i<rw;i++) hist[row[i]]++;
+	}
+	unsigned long total = (unsigned long)rw * rh;
+	if(total == 0) return;
+	unsigned long sum_all = 0; for(int i=0;i<256;i++) sum_all += i * hist[i];
+	unsigned long wB = 0; unsigned long sumB = 0; double max_between = -1.0; int best_th = 0;
+	for(int t=0;t<256;t++){
+		wB += hist[t];
+		if(wB == 0) continue;
+		unsigned long wF = total - wB; if(wF == 0) break;
+		sumB += t * hist[t];
+		double mB = (double)sumB / wB;
+		double mF = (double)(sum_all - sumB) / wF;
+		double diff = mB - mF; double between = (double)wB * (double)wF * diff * diff;
+		if(between > max_between){ max_between = between; best_th = t; }
+	}
+	// 应用阈值
+	for(int j=0;j<rh;j++){
+		uint8_t *row = rgay_image + (ry + j) * VIS_ORI_W + rx;
+		for(int i=0;i<rw;i++) row[i] = (row[i] > best_th) ? 255 : 0;
+	}
 }
 
 //------------------------------------------------------------------------------------------------
@@ -340,9 +431,9 @@ void vis_search_l_r(uint16 break_flag, uint8(*image)[VIS_W], uint16 *l_stastic, 
 //使用实例    vis_get_left(total_L);    // 获取左边线数组
 //备注信息    根据搜索到的左边点，得到左边线数组	
 //------------------------------------------------------------------------------------------------
-extern linelist l_border;
-extern linelist r_border;
-extern linelist center_line;
+ linelist l_border;
+ linelist r_border;
+ linelist center_line;
 void vis_get_left(uint16 total_L)
 {
 	uint8 i = 0;
@@ -371,6 +462,13 @@ void vis_get_left(uint16 total_L)
 	}
 }
 
+//------------------------------------------------------------------------------------------------
+//函数名称    vis_get_right
+//参数说明    uint16 total_R：右边点统计数量
+//返回参数    void
+//使用实例    vis_get_right(total_R);    // 获取右边线数组
+//备注信息    根据搜索到的右边点，未命中行保持默认最右值以维持中心线稳定
+//------------------------------------------------------------------------------------------------
 void vis_get_right(uint16 total_R)
 {
 	uint8 i = 0;
@@ -468,6 +566,20 @@ void vis_image_draw_rectan(uint8(*image)[VIS_W])
 }
 
 //------------------------------------------------------------------------------------------------
+//函数名称    vis_cal_centerline
+//参数说明    void
+//返回参数    void
+//使用实例    vis_cal_centerline();    // 计算中线
+//备注信息    计算中线
+void vis_cal_centerline(void){
+	uint8 i = 0;
+	for (i = 0; i < VIS_H; i++)
+	{
+		center_line[i] = (l_border[i] + r_border[i]) >> 1;
+	}
+}	
+
+//------------------------------------------------------------------------------------------------
 //函数名称    vis_draw_line
 //参数说明    void
 //返回参数    void
@@ -493,35 +605,69 @@ void vis_draw_line() {
 }
 
 //------------------------------------------------------------------------------------------------
+//函数名称    vis_cal_err
+//参数说明    void
+//返回参数    float：偏差值
+//使用实例    float err = vis_cal_err();    // 计算偏差值
+//备注信息    计算偏差值
+//------------------------------------------------------------------------------------------------
+float err = 0.0;
+void vis_cal_err(void){
+
+	// 取20到50行，每隔5行取一个点，计算与图像中心的偏差均值
+	int sum_err = 0;
+	int count = 0;
+	int center_x = VIS_W / 2;
+	int i;
+	for (i = 20; i <= 50; i += 5) {
+		int cl = center_line[i];
+		sum_err += (cl - center_x);
+		count++;
+	}
+	err = (float)sum_err / count;
+	// printf("track err = %f\n", err);
+}
+
+
+//------------------------------------------------------------------------------------------------
 //函数名称    vis_image_process
 //参数说明    void
 //返回参数    void
-//使用实例    vis_image_process();    // 图像处理主函数
+//使用实例    vis_image_process();   
 //备注信息    图像处理主函数
 //------------------------------------------------------------------------------------------------
 void vis_image_process(void)
 {
-    //uint16 i = 0;
-    uint8 bin_image[VIS_H][VIS_W] = { 0 };//二值化图像
-    vis_otsu(); //大津法二值化
-    memcpy(bin_image, rgay_image, VIS_SIZE);//复制到二维数组
-    vis_image_filter(bin_image);//形态学滤波
-    vis_image_draw_rectan(bin_image);//给图像画一个黑框
-    data_stastics_l = 0;
-    data_stastics_r = 0;
-    hightest = 0;
-    if (vis_get_start_point(VIS_H - 2))//获取起始点
-    {   
-        vis_search_l_r((uint16)USE_num, bin_image, &data_stastics_l, &data_stastics_r, start_point_l[0], start_point_l[1], start_point_r[0], start_point_r[1], &hightest);//搜索左右边线点  
-        //获取左边界和右边界
-        vis_get_left(data_stastics_l);
-        vis_get_right(data_stastics_r);
-    }
-    vis_draw_line();	//可选边线显示
+	if(!rgay_image) return;
+	// 显示模式: 灰度直显 (尊重裁切) 或 赛道算法
+	if(g_img_display_mode == IMG_MODE_GRAY){
+		int rx,ry,rw,rh; image_apply_crops(&rx,&ry,&rw,&rh);
+		if(rw<=0||rh<=0) return;
+		static uint8_t roi_buf[VIS_ORI_W*VIS_ORI_H]; // 临时缓冲 (可优化为动态或静态最小尺寸)
+		for(int j=0;j<rh;j++) memcpy(roi_buf + j*rw, rgay_image + (ry+j)*VIS_ORI_W + rx, rw);
+		ips200_show_gray_image(0,0, roi_buf, rw, rh);
+		return;
+	}
 
-    //ips200_show_gray_image(0,0,(const uint8 *)rgay_image, VIS_W, VIS_H);
+	// 赛道模式: 需无裁切保证算法固定尺寸
+	if(g_crop_top||g_crop_bottom||g_crop_left||g_crop_right){
+		ips200_show_string(0,0,"CLR CROPS FOR TRACK");
+		return;
+	}
+	uint8 bin_image[VIS_H][VIS_W] = { 0 };
+	vis_otsu();
+	memcpy(bin_image, rgay_image, VIS_SIZE);
+	vis_image_filter(bin_image);
+	vis_image_draw_rectan(bin_image);
+	data_stastics_l = 0; data_stastics_r = 0; hightest = 0;
+	if (vis_get_start_point(VIS_H - 2)){
+		vis_search_l_r((uint16)USE_num, bin_image, &data_stastics_l, &data_stastics_r, start_point_l[0], start_point_l[1], start_point_r[0], start_point_r[1], &hightest);
+		vis_get_left(data_stastics_l); vis_get_right(data_stastics_r);
+	}
+	vis_cal_centerline();
+	vis_cal_err();
+	ips200_show_gray_image(0,0,(const uint8 *)rgay_image, VIS_W, VIS_H);
 }
-
 
 
 

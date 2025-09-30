@@ -60,11 +60,23 @@ void image_param_load(void)
 //------------------------------------------------------------------------------------------------
 void image_param_save(void)
 {
-	FILE *fp = fopen(IMAGE_PARAM_STORE_PATH, "w");
-	if(!fp){ printf("[IMG] save failed %s\n", IMAGE_PARAM_STORE_PATH); return; }
-	fprintf(fp, "%d %d %d %d %d\n", g_img_display_mode, g_crop_top, g_crop_bottom, g_crop_left, g_crop_right);
-	fclose(fp);
-	printf("[IMG] saved to %s\n", IMAGE_PARAM_STORE_PATH);
+		FILE *fp = fopen(IMAGE_PARAM_STORE_PATH, "w");
+		if(!fp){ printf("[IMG] save failed %s\n", IMAGE_PARAM_STORE_PATH); return; }
+		fprintf(fp,
+			"IMG\n"
+			"Mode %d\n"
+			"Crop_Top %d\n"
+			"Crop_Bottom %d\n"
+			"Crop_Left %d\n"
+			"Crop_Right %d\n",
+			g_img_display_mode,
+			g_crop_top,
+			g_crop_bottom,
+			g_crop_left,
+			g_crop_right
+		);
+		fclose(fp);
+		printf("[IMG] saved to %s\n", IMAGE_PARAM_STORE_PATH);
 }
 
 //------------------------------------------------------------------------------------------------
@@ -571,6 +583,7 @@ void vis_image_draw_rectan(uint8(*image)[VIS_W])
 //返回参数    void
 //使用实例    vis_cal_centerline();    // 计算中线
 //备注信息    计算中线
+//------------------------------------------------------------------------------------------------
 void vis_cal_centerline(void){
 	uint8 i = 0;
 	for (i = 0; i < VIS_H; i++)

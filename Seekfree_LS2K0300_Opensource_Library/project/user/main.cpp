@@ -42,6 +42,7 @@ int main(void)
     printf("\r\n==== System Boot ====\r\n");
     //printf("[OK ] LCD init.\r\n");
     //pid_init_defaults();
+    device_init();
     pid_param_flash_read();    // 加载保存的 PID/base/target
     image_param_load();        // 加载图像显示/裁切参数
     app_menu_state_t state = APP_MENU_MAIN;

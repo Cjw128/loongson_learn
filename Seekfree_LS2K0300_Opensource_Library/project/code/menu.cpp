@@ -56,10 +56,15 @@ void pid_param_flash_write(void)
 {
     FILE *fp = fopen(PARAM_STORE_PATH, "w");
     if(!fp) { printf("[PID] save failed(open) %s\r\n", PARAM_STORE_PATH); return; }
-    fprintf(fp, "P2 %f %f %f %f %f %f %f %f %f %f %f %f %f %f\n",
-            motor_dir.kp, motor_dir.ki, motor_dir.kd, motor_dir.integral_limit, motor_dir.omax, motor_dir.omin,
-            motor_l.kp,   motor_l.ki,   motor_l.kd,   motor_l.integral_limit,   motor_l.omax,   motor_l.omin,
-            g_base_speed, g_target_speed);
+    fprintf(fp,
+        "P2\n"
+        "Dir_Kp %.6f\nDir_Ki %.6f\nDir_Kd %.6f\nDir_ILim %.6f\nDir_OMax %.6f\nDir_OMin %.6f\n"
+        "Spd_Kp %.6f\nSpd_Ki %.6f\nSpd_Kd %.6f\nSpd_ILim %.6f\nSpd_OMax %.6f\nSpd_OMin %.6f\n"
+        "Base %.6f\nTarget %.6f\n",
+        motor_dir.kp, motor_dir.ki, motor_dir.kd, motor_dir.integral_limit, motor_dir.omax, motor_dir.omin,
+        motor_l.kp,   motor_l.ki,   motor_l.kd,   motor_l.integral_limit,   motor_l.omax,   motor_l.omin,
+        g_base_speed, g_target_speed
+    );
     fclose(fp);
     printf("[PID] saved to %s\r\n", PARAM_STORE_PATH);
 }
@@ -124,28 +129,55 @@ static inline uint8 key_short(key_index_enum key)
 //------------------------------------------------------------------------------------------------
 int menu_main(void)
 {
-    int flag = 1; // 1..4
+    int sel = 1; // 1..4
+    int last_sel = -1;
     ips200_clear();
     ips200_show_string(0, 100, "Menu 1: test1");
     ips200_show_string(0, 120, "PID_Config");
     ips200_show_string(0, 140, "Image_Param");
     ips200_show_string(0, 160, "Image_test");
+
+    // 长按加速计时（与子菜单一致参数）
+    uint32_t hold_dec = 0, hold_inc = 0; // KEY_1=dec KEY_2=inc
+    const uint32_t first_delay=400, repeat_gap=120, accel_after=1500, fast=60;
+
     while(1)
     {
         key_scanner();
-        if (key_short(KEY_2)) { if(++flag > 4) flag = 1; }
-        if (key_short(KEY_1)) { if(--flag < 1) flag = 4; }
+        // 短按一次
+        if (key_short(KEY_2)) { if(++sel > 4) sel = 1; }
+        if (key_short(KEY_1)) { if(--sel < 1) sel = 4; }
+
+        // 长按加速：模拟连续触发
+        int rep_dir = 0; // -1 上, +1 下
+        if(key_is_pressed(KEY_1)) {
+            hold_dec += 10;
+            if(hold_dec > first_delay){ uint32_t g=(hold_dec>accel_after)?fast:repeat_gap; if(((hold_dec-first_delay)%g)<10) rep_dir = -1; }
+        } else hold_dec = 0;
+        if(key_is_pressed(KEY_2)) {
+            hold_inc += 10;
+            if(hold_inc > first_delay){ uint32_t g=(hold_inc>accel_after)?fast:repeat_gap; if(((hold_inc-first_delay)%g)<10) rep_dir = (rep_dir==-1)?-1:1; }
+        } else hold_inc = 0;
+        if(rep_dir == 1){ if(++sel > 4) sel = 1; }
+        else if(rep_dir == -1){ if(--sel < 1) sel = 4; }
+
+        // 确认
         if (key_short(KEY_3)) {
             while(key_get_state(KEY_3) != KEY_RELEASE) { key_scanner(); system_delay_ms(10); }
-            return flag; // 1=test1 2=PID 3=Image_test 4=Image_Param
+            return sel; // 1=test1 2=PID 3=Image_test 4=Image_Param
         }
-        // 清除旧标记
-        ips200_show_string(120,100, " ");
-        ips200_show_string(120,120, " ");
-        ips200_show_string(120,140, " ");
-        ips200_show_string(120,160, " ");
-        ips200_show_string(120,100 + (flag - 1) * 20, "x");
-        system_delay_ms(80);
+
+        // 仅在变化时刷新光标，减少闪烁
+        if(last_sel != sel){
+            // 清除全部标记
+            ips200_show_string(120,100, " ");
+            ips200_show_string(120,120, " ");
+            ips200_show_string(120,140, " ");
+            ips200_show_string(120,160, " ");
+            ips200_show_string(120,100 + (sel - 1) * 20, "<");
+            last_sel = sel;
+        }
+        system_delay_ms(10); // 更快响应
     }
 }
 
@@ -431,6 +463,7 @@ int menu_image_config(void)
         system_delay_ms(10);
     }
 }
+
 
 // 旧接口保留
 int menu_param_config(void){ return menu_pid_config(); }

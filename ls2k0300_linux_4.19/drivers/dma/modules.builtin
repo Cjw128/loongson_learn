@@ -1,3 +1,0 @@
-kernel/drivers/dma/virt-dma.ko
-kernel/drivers/dma/lsia_dma.ko
-kernel/drivers/dma/ls_apbdmac.ko

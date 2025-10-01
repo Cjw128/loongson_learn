@@ -1,4 +1,0 @@
-kernel/drivers/net/can/can-dev.ko
-kernel/drivers/net/can/ifi_canfd/ifi_canfd.ko
-kernel/drivers/net/can/ls_can/lscan.ko
-kernel/drivers/net/can/ls_can/lscan_platform.ko

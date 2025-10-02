@@ -22,6 +22,9 @@ volatile int g_crop_bottom = 0;
 volatile int g_crop_left = 0;
 volatile int g_crop_right = 0;
 
+// 全局二值图缓冲（供寻线/边界检测使用），避免修改原灰度图
+static uint8_t g_bin_image[VIS_H][VIS_W];
+
 #ifndef IMAGE_PARAM_STORE_PATH
 #define IMAGE_PARAM_STORE_PATH "/home/root/image_cfg.txt"
 #endif
@@ -41,12 +44,66 @@ void image_param_load(void)
 		printf("[IMG] no image param file, using defaults\n");
 		return;
 	}
-	int mode, t,b,l,r;
-	if(5==fscanf(fp, "%d %d %d %d %d", &mode,&t,&b,&l,&r)){
+
+	// 读取首个标记，判断是新格式还是旧格式
+	char first[16] = {0};
+	if(fscanf(fp, "%15s", first) != 1){
+		printf("[IMG] empty param file\n");
+		fclose(fp); return;
+	}
+
+	// 处理可能的 UTF-8 BOM（会把 first 读成 "\xEF\xBB\xBFIMG" 或其它前缀）
+	unsigned char *uf = (unsigned char*)first;
+	if(uf[0]==0xEF && uf[1]==0xBB && uf[2]==0xBF){
+		// 移除 BOM
+		memmove(first, first+3, strlen(first+3)+1);
+	}
+
+	int use_labeled = 0;
+	if(0 == strcmp(first, "IMG")){
+		use_labeled = 1; // 标准新格式，有头
+	}else if(0 == strcmp(first, "Mode") || 0==strncmp(first, "Crop_",5)){
+		use_labeled = 2; // 无头但使用标签，兼容
+	}
+
+	if(use_labeled){
+		// 回到文件开头重新逐行解析，统一逻辑（包含有头和无头两种）
+		fseek(fp, 0, SEEK_SET);
+		char line[128];
+		int mode = g_img_display_mode;
+		int top = g_crop_top, bottom = g_crop_bottom, left = g_crop_left, right = g_crop_right;
+		while(fgets(line, sizeof(line), fp)){
+			char key[32]; int val;
+			if(2 == sscanf(line, "%31s %d", key, &val)){
+				if(0==strcmp(key, "IMG")) continue; // 头行
+				if(0==strcmp(key, "Mode")) mode = val;
+				else if(0==strcmp(key, "Crop_Top")) top = val;
+				else if(0==strcmp(key, "Crop_Bottom")) bottom = val;
+				else if(0==strcmp(key, "Crop_Left")) left = val;
+				else if(0==strcmp(key, "Crop_Right")) right = val;
+			}
+		}
 		g_img_display_mode = (mode==IMG_MODE_TRACK)?IMG_MODE_TRACK:IMG_MODE_GRAY;
-		g_crop_top=t; g_crop_bottom=b; g_crop_left=l; g_crop_right=r;
-	}else{
-		printf("[IMG] image param file format error\n");
+		g_crop_top = top; g_crop_bottom = bottom; g_crop_left = left; g_crop_right = right;
+		if(g_crop_top   <0) g_crop_top=0; if(g_crop_top   > VIS_ORI_H-10) g_crop_top = VIS_ORI_H-10;
+		if(g_crop_bottom<0) g_crop_bottom=0; if(g_crop_bottom> VIS_ORI_H-10) g_crop_bottom= VIS_ORI_H-10;
+		if(g_crop_left  <0) g_crop_left=0; if(g_crop_left  > VIS_ORI_W-10) g_crop_left = VIS_ORI_W-10;
+		if(g_crop_right <0) g_crop_right=0; if(g_crop_right > VIS_ORI_W-10) g_crop_right= VIS_ORI_W-10;
+		if(g_crop_top + g_crop_bottom > VIS_ORI_H-5){ g_crop_bottom = (VIS_ORI_H-5) - g_crop_top; if(g_crop_bottom<0) g_crop_bottom=0; }
+		if(g_crop_left + g_crop_right > VIS_ORI_W-5){ g_crop_right = (VIS_ORI_W-5) - g_crop_left; if(g_crop_right<0) g_crop_right=0; }
+		printf("[IMG] loaded %s labeled image params\n", (use_labeled==1)?"headered":"headerless");
+	}
+	else {
+		// 回退尝试旧格式（五个数字）
+		fseek(fp, 0, SEEK_SET);
+		int mode, t,b,l,r;
+		if(5==fscanf(fp, "%d %d %d %d %d", &mode,&t,&b,&l,&r)){
+			g_img_display_mode = (mode==IMG_MODE_TRACK)?IMG_MODE_TRACK:IMG_MODE_GRAY;
+			g_crop_top=t; g_crop_bottom=b; g_crop_left=l; g_crop_right=r;
+			printf("[IMG] loaded legacy image params\n");
+		}else{
+			printf("[IMG] image param file format error (first token=%s)\n", first);
+		}
 	}
 	fclose(fp);
 }
@@ -145,42 +202,56 @@ int vis_camera_init(const char* device)
 }
 
 //------------------------------------------------------------------------------------------------
-//函数名称    vis_otsu
-//参数说明    void
-//返回参数    void
-//使用实例    vis_otsu();    // 大津法二值化（纯C实现）
-//备注信息    基于运行期裁切参数计算 ROI，在该区域内执行 Otsu 阈值并就地写回。
+//函数名称    vis_otsu_compute_threshold
+//参数说明    const uint8_t* img, int w, int h
+//返回参数    int：最佳阈值 (0-255)，失败返回 -1
+//使用实例    int th = vis_otsu_compute_threshold(rgay_image, VIS_ORI_W, VIS_ORI_H);
+//备注信息    仅计算阈值，不修改原图。可配合缓存减少重复计算。
 //------------------------------------------------------------------------------------------------
-void vis_otsu(){
-	if(!rgay_image) return;
-	int rx, ry, rw, rh; image_apply_crops(&rx,&ry,&rw,&rh);
-	if(rw <= 0 || rh <= 0) return;
-	unsigned long hist[256];
-	memset(hist,0,sizeof(hist));
-	// 统计直方图
-	for(int j=0;j<rh;j++){
-		const uint8_t *row = rgay_image + (ry + j) * VIS_ORI_W + rx;
-		for(int i=0;i<rw;i++) hist[row[i]]++;
-	}
-	unsigned long total = (unsigned long)rw * rh;
-	if(total == 0) return;
-	unsigned long sum_all = 0; for(int i=0;i<256;i++) sum_all += i * hist[i];
-	unsigned long wB = 0; unsigned long sumB = 0; double max_between = -1.0; int best_th = 0;
-	for(int t=0;t<256;t++){
-		wB += hist[t];
-		if(wB == 0) continue;
-		unsigned long wF = total - wB; if(wF == 0) break;
-		sumB += t * hist[t];
-		double mB = (double)sumB / wB;
-		double mF = (double)(sum_all - sumB) / wF;
-		double diff = mB - mF; double between = (double)wB * (double)wF * diff * diff;
-		if(between > max_between){ max_between = between; best_th = t; }
-	}
-	// 应用阈值
-	for(int j=0;j<rh;j++){
-		uint8_t *row = rgay_image + (ry + j) * VIS_ORI_W + rx;
-		for(int i=0;i<rw;i++) row[i] = (row[i] > best_th) ? 255 : 0;
-	}
+static int vis_otsu_compute_threshold(const uint8_t *img, int w, int h)
+{
+    if(!img || w<=0 || h<=0) return -1;
+    static unsigned long hist[256];
+    memset(hist, 0, sizeof(hist));
+#ifdef OTSU_SUBSAMPLE
+    // 下采样直方图（可选）：减少统计量（例如每 2 行、2 列取一次）
+    for(int y=0; y<h; y+=2){
+        const uint8_t *row = img + y*w;
+        for(int x=0; x<w; x+=2) hist[row[x]]++;
+    }
+    unsigned long total = (unsigned long)((h+1)/2) * ((w+1)/2);
+#else
+    for(int y=0; y<h; ++y){
+        const uint8_t *row = img + y*w;
+        for(int x=0; x<w; ++x) hist[row[x]]++;
+    }
+    unsigned long total = (unsigned long)w * h;
+#endif
+    if(total == 0) return -1;
+    unsigned long sum_all = 0; for(int i=0;i<256;i++) sum_all += (unsigned long)i * hist[i];
+    unsigned long wB = 0, sumB = 0; double max_between = -1.0; int best_th = 0;
+    for(int t=0; t<256; ++t){
+        wB += hist[t]; if(wB == 0) continue; unsigned long wF = total - wB; if(wF == 0) break;
+        sumB += (unsigned long)t * hist[t];
+        double mB = (double)sumB / wB;
+        double mF = (double)(sum_all - sumB) / wF;
+        double diff = mB - mF; double between = (double)wB * (double)wF * diff * diff;
+        if(between > max_between){ max_between = between; best_th = t; }
+    }
+    return best_th;
+}
+
+//------------------------------------------------------------------------------------------------
+//函数名称    vis_binarize
+//参数说明    const uint8_t* src, uint8_t *dst, int w, int h, int th
+//返回参数    void
+//使用实例    vis_binarize(rgay_image, bin_image[0], VIS_W, VIS_H, threshold);
+//备注信息    根据给定阈值生成二值图像 (255/0)
+//------------------------------------------------------------------------------------------------
+static inline void vis_binarize(const uint8_t *src, uint8_t *dst, int w, int h, int th)
+{
+    const uint8_t *s = src; uint8_t *d = dst; int total = w*h;
+    for(int i=0;i<total;i++){ d[i] = (s[i] > th) ? 255 : 0; }
 }
 
 //------------------------------------------------------------------------------------------------
@@ -194,40 +265,25 @@ uint8 start_point_l[2] = {0};
 uint8 start_point_r[2] = {0};
 uint8 vis_get_start_point(uint8 start_row)
 {
-	uint8 i = 0,l_found = 0,r_found = 0;
-	//清零
-	start_point_l[0] = 0;//x
-	start_point_l[1] = 0;//y
-
-	start_point_r[0] = 0;//x
-	start_point_r[1] = 0;//y
-
-	for (i = VIS_W / 2; i > VIS_BORDER_MIN; i--)
-	{
-		start_point_l[0] = i;//x
-		start_point_l[1] = start_row;//y
-		if (rgay_image[start_row * VIS_ORI_W + i] == 255 && rgay_image[start_row * VIS_ORI_W + i - 1] == 0)
-		{
-			l_found = 1;
-			break;
-		}
-	}
-
-	for (i = VIS_W / 2; i < VIS_BORDER_MAX ;i++)
-	{
-		start_point_r[0] = i;//x
-		start_point_r[1] = start_row;//y
-		if (rgay_image[start_row * VIS_ORI_W + i] == 255 && rgay_image[start_row * VIS_ORI_W + i + 1] == 0)
-		{
-			r_found = 1;
-			break;
-		}
-	}
-
-	if(l_found&&r_found)return 1;
-	else {
-		return 0;
-	} 
+    uint8 i = 0,l_found = 0,r_found = 0;
+    // 清零
+    start_point_l[0] = 0; start_point_l[1] = 0;
+    start_point_r[0] = 0; start_point_r[1] = 0;
+    if(start_row >= VIS_H) return 0;
+    // 在二值图 g_bin_image 上寻找 (白->黑 或 黑->白) 边界，根据原逻辑：当前点白 且 左/右相邻黑
+    for (i = VIS_W / 2; i > VIS_BORDER_MIN; i--)
+    {
+        start_point_l[0] = i; start_point_l[1] = start_row;
+        if (g_bin_image[start_row][i] == 255 && g_bin_image[start_row][i - 1] == 0)
+        { l_found = 1; break; }
+    }
+    for (i = VIS_W / 2; i < VIS_BORDER_MAX; i++)
+    {
+        start_point_r[0] = i; start_point_r[1] = start_row;
+        if (g_bin_image[start_row][i] == 255 && g_bin_image[start_row][i + 1] == 0)
+        { r_found = 1; break; }
+    }
+    return (l_found && r_found) ? 1 : 0;
 }
 
 
@@ -514,39 +570,21 @@ void vis_get_right(uint16 total_R)
 //定义膨胀和腐蚀的阈值区间
 #define threshold_max	255*5//此参数可根据自己的需求调节
 #define threshold_min	255*2//此参数可根据自己的需求调节
-void vis_image_filter(uint8(*bin_image)[VIS_W])//形态学滤波，简单来说就是膨胀和腐蚀的思想
+void vis_image_filter(uint8(*bin_image)[VIS_W])
 {
-	uint16 i, j;
-	uint32 num = 0;
-
-
-	for (i = 1; i < VIS_H - 1; i++)
-	{
-		for (j = 1; j < (VIS_W - 1); j++)
-		{
-			//统计八个方向的像素值
-			num =
-				bin_image[i - 1][j - 1] + bin_image[i - 1][j] + bin_image[i - 1][j + 1]
-				+ bin_image[i][j - 1] + bin_image[i][j + 1]
-				+ bin_image[i + 1][j - 1] + bin_image[i + 1][j] + bin_image[i + 1][j + 1];
-
-
-			if (num >= threshold_max && bin_image[i][j] == 0)
-			{
-
-				bin_image[i][j] = 255;//白  可以搞成宏定义，方便更改
-
-			}
-			if (num <= threshold_min && bin_image[i][j] == 255)
-			{
-
-				bin_image[i][j] = 0;//黑
-
-			}
-
-		}
-	}
-
+    // 优化：减少重复索引，使用行指针；用 uint16 累加（8*255=2040 fits in 16 bits）
+    for(int y=1; y<VIS_H-1; ++y){
+        uint8 *row_m1 = bin_image[y-1];
+        uint8 *row    = bin_image[y];
+        uint8 *row_p1 = bin_image[y+1];
+        for(int x=1; x<VIS_W-1; ++x){
+            uint16 sum = row_m1[x-1] + row_m1[x] + row_m1[x+1]
+                        + row[x-1]            + row[x+1]
+                        + row_p1[x-1] + row_p1[x] + row_p1[x+1];
+            if(row[x] == 0){ if(sum >= threshold_max) row[x] = 255; }
+            else           { if(sum <= threshold_min) row[x] = 0;   }
+        }
+    }
 }
 
 //------------------------------------------------------------------------------------------------
@@ -601,20 +639,18 @@ void vis_cal_centerline(void){
 //------------------------------------------------------------------------------------------------
 void vis_draw_line() {
 	for (int i = hightest; i < VIS_H - 1; i++)
-    {
-        int cl = center_line[i];
-    int lb = l_border[i];
-    int rb = r_border[i];
-    // 限制坐标范围
-    cl = (cl < 0) ? 0 : (cl >= VIS_W ? VIS_W - 1 : cl);
-    lb = (lb < 0) ? 0 : (lb >= VIS_W ? VIS_W - 1 : lb);
-    rb = (rb < 0) ? 0 : (rb >= VIS_W ? VIS_W - 1 : rb);
-        ips200_draw_point(cl, i, RGB565_BLUE);
-        ips200_draw_point(lb, i, RGB565_GREEN);
-        ips200_draw_point(rb, i, RGB565_GREEN);
-    }
-	system_delay_ms(20);
-	ips200_clear();
+	{
+		int cl = center_line[i];
+		int lb = l_border[i];
+		int rb = r_border[i];
+		cl = (cl < 0) ? 0 : (cl >= VIS_W ? VIS_W - 1 : cl);
+		lb = (lb < 0) ? 0 : (lb >= VIS_W ? VIS_W - 1 : lb);
+		rb = (rb < 0) ? 0 : (rb >= VIS_W ? VIS_W - 1 : rb);
+		ips200_draw_point(cl, i, RGB565_BLUE);
+		ips200_draw_point(lb, i, RGB565_GREEN);
+		ips200_draw_point(rb, i, RGB565_GREEN);
+	}
+	// 移除延时与清屏，避免刷新瓶颈；如需闪烁/调试可临时恢复
 }
 
 //------------------------------------------------------------------------------------------------
@@ -641,6 +677,41 @@ void vis_cal_err(void){
 	// printf("track err = %f\n", err);
 }
 
+//============================================================
+// 回退：若本帧主线提取失败(左右点数量很少或未找到起点)，尝试逐行直接扫描二值图获取左右边界
+// 逻辑：
+//   左边界：从 1 到 VIS_W/2-1 寻找 (bin[y][x]==255 && bin[y][x-1]==0)
+//   右边界：从 VIS_W/2 到 VIS_W-2 寻找 (bin[y][x]==255 && bin[y][x+1]==0)
+// 若找到则写入 l_border / r_border；未找到则保持默认，不参与 err 偏差期望外的异常抖动
+//============================================================
+static void vis_fallback_scan_edges(void)
+{
+	int useful_rows = 0;
+	for(int y=1; y<VIS_H-1; ++y){
+		int lb = -1, rb = -1;
+		// 左扫描
+		for(int x=1; x< (VIS_W/2); ++x){
+			if(g_bin_image[y][x] == 255 && g_bin_image[y][x-1] == 0){ lb = x; break; }
+		}
+		// 右扫描
+		for(int x=VIS_W/2; x< VIS_W-1; ++x){
+			if(g_bin_image[y][x] == 255 && g_bin_image[y][x+1] == 0){ rb = x; break; }
+		}
+		if(lb >=0 && rb >=0 && rb - lb > 4){
+			l_border[y] = lb;
+			r_border[y] = rb;
+			useful_rows++;
+		}
+	}
+	if(useful_rows > 0){
+		// 重算中心线 & 误差
+		vis_cal_centerline();
+		vis_cal_err();
+		// 可选：调试提示（覆盖顶部一行，不频繁 printf，避免影响实时性）
+		ips200_show_string(0,0,"FB");
+	}
+}
+
 
 //------------------------------------------------------------------------------------------------
 //函数名称    vis_image_process
@@ -656,7 +727,7 @@ void vis_image_process(void)
 	if(g_img_display_mode == IMG_MODE_GRAY){
 		int rx,ry,rw,rh; image_apply_crops(&rx,&ry,&rw,&rh);
 		if(rw<=0||rh<=0) return;
-		static uint8_t roi_buf[VIS_ORI_W*VIS_ORI_H]; // 临时缓冲 (可优化为动态或静态最小尺寸)
+		static uint8_t roi_buf[VIS_ORI_W*VIS_ORI_H];
 		for(int j=0;j<rh;j++) memcpy(roi_buf + j*rw, rgay_image + (ry+j)*VIS_ORI_W + rx, rw);
 		ips200_show_gray_image(0,0, roi_buf, rw, rh);
 		return;
@@ -667,19 +738,46 @@ void vis_image_process(void)
 		ips200_show_string(0,0,"CLR CROPS FOR TRACK");
 		return;
 	}
-	uint8 bin_image[VIS_H][VIS_W] = { 0 };
-	vis_otsu();
-	memcpy(bin_image, rgay_image, VIS_SIZE);
-	vis_image_filter(bin_image);
-	vis_image_draw_rectan(bin_image);
+
+	// 1. 计算/复用阈值
+	static int cached_th = -1;          // 上一次 Otsu 阈值
+	static int frame_since_th = 0;      // 已使用帧数
+	const int TH_RECALC_INTERVAL = 5;   // 每 5 帧重新计算一次阈值（可调）
+	if(cached_th < 0 || frame_since_th >= TH_RECALC_INTERVAL){
+		int th = vis_otsu_compute_threshold(rgay_image, VIS_W, VIS_H);
+		if(th >= 0) cached_th = th; // 失败则保留旧值
+		frame_since_th = 0;
+	} else {
+		frame_since_th++;
+	}
+
+	// 2. 二值化到本地缓冲（使用栈上二维数组）
+	// 使用全局二值图缓存
+	vis_binarize(rgay_image, &g_bin_image[0][0], VIS_W, VIS_H, cached_th >= 0 ? cached_th : 128);
+
+	// 3. 简单形态学滤波 & 边框
+	vis_image_filter(g_bin_image);
+	vis_image_draw_rectan(g_bin_image);
+
+	// 4. 寻线 + 中线/误差计算
 	data_stastics_l = 0; data_stastics_r = 0; hightest = 0;
 	if (vis_get_start_point(VIS_H - 2)){
-		vis_search_l_r((uint16)USE_num, bin_image, &data_stastics_l, &data_stastics_r, start_point_l[0], start_point_l[1], start_point_r[0], start_point_r[1], &hightest);
+		vis_search_l_r((uint16)USE_num, g_bin_image, &data_stastics_l, &data_stastics_r,
+						start_point_l[0], start_point_l[1], start_point_r[0], start_point_r[1], &hightest);
 		vis_get_left(data_stastics_l); vis_get_right(data_stastics_r);
 	}
 	vis_cal_centerline();
 	vis_cal_err();
-	ips200_show_gray_image(0,0,(const uint8 *)rgay_image, VIS_W, VIS_H);
+
+	// 5. 显示：仍显示原灰度背景（可改为显示 bin_image 阈值图）
+	//ips200_show_gray_image(0,0,(const uint8 *)rgay_image, VIS_W, VIS_H);
+	// 如果要叠加线，可调用 vis_draw_line(); (注意性能)
+
+	// 若左右点统计过少，意味着主寻线失败，启用回退扫描辅助 err 输出
+	if(data_stastics_l < 5 || data_stastics_r < 5){
+		vis_fallback_scan_edges();
+	}
+	vis_draw_line();
 }
 
 

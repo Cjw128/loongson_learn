@@ -5,6 +5,7 @@
 #include "key.h"
 #include "image.h"
 #include "PID.h"
+#include <time.h>
 
 /******************************************用户代码******************************************/
 
@@ -132,7 +133,7 @@ int menu_main(void)
     int sel = 1; // 1..4
     int last_sel = -1;
     ips200_clear();
-    ips200_show_string(0, 100, "Menu 1: test1");
+    ips200_show_string(0, 100, "Loongson_99Pai");
     ips200_show_string(0, 120, "PID_Config");
     ips200_show_string(0, 140, "Image_Param");
     ips200_show_string(0, 160, "Image_test");
@@ -192,30 +193,94 @@ int menu_image_view(void)
 {
     ips200_clear();
     ips200_show_string(0,0,"UVC VIEW");
-    // 阻塞抓帧 + 显示，长按 KEY4 退出
+    ips200_show_string(0,12,"Hold K4 exit");
+
+    // 长按自维护：不完全依赖 KEY_LONG_PRESS，兼容底层差异
+    uint32_t hold_ms = 0;              // 已按住时间
+    const uint32_t EXIT_MS = 800;      // 退出阈值 (可调)
+    uint32_t last_progress_slot = 0;   // 上次显示的 100ms 槽
+
+    // 帧率统计变量
+    static float s_fps = 0.0f;          // 最近计算出的 FPS
+    struct timespec ts_now;             // 当前时间
+    static struct timespec ts_last = {0,0};
+    static int frame_cnt = 0;           // 统计帧数
+    if(ts_last.tv_sec == 0 && ts_last.tv_nsec == 0){ clock_gettime(CLOCK_MONOTONIC, &ts_last); }
+
     while(1)
     {
         if(wait_image_refresh() < 0)
         {
-            ips200_show_string(0,20,"CAP FAIL");
-            system_delay_ms(100);
-            continue;
+            ips200_show_string(0,20,"CAP FAIL   ");
+            system_delay_ms(40); // 更快重试
         }
-        if(rgay_image)
+        else if(rgay_image)
         {
-            //ips200_show_gray_image(0, 0, rgay_image, UVC_WIDTH, UVC_HEIGHT);
+            // 根据模式内部处理&显示
             vis_image_process();
+            // 成功获取并处理一帧才计数
+            frame_cnt++;
         }
-        char buf[32];
+
+        char buf[40];
         snprintf(buf, sizeof(buf), "ERR: %.2f", err);
         ips200_show_string(0, 120, buf);
-        // 按键退出
+
+        // 计算 FPS（每 >=500ms 更新一次以避免抖动）
+        clock_gettime(CLOCK_MONOTONIC, &ts_now);
+        long sec_diff  = ts_now.tv_sec - ts_last.tv_sec;
+        long nsec_diff = ts_now.tv_nsec - ts_last.tv_nsec;
+        if(nsec_diff < 0){ sec_diff -= 1; nsec_diff += 1000000000L; }
+        double elapsed = (double)sec_diff + (double)nsec_diff/1e9;
+        if(elapsed >= 0.5) // 半秒刷新一次
+        {
+            s_fps = frame_cnt / (float)elapsed;
+            frame_cnt = 0;
+            ts_last = ts_now;
+        }
+        char fps_buf[32];
+        snprintf(fps_buf, sizeof(fps_buf), "FPS: %.2f", s_fps);
+        ips200_show_string(0, 140, fps_buf); // 在 ERR 下一行
+
         key_scanner();
+
+        // 兼容旧的 KEY_LONG_PRESS 直接退出
         if(key_get_state(KEY_4) == KEY_LONG_PRESS)
         {
-            while(key_get_state(KEY_4) != KEY_RELEASE){ key_scanner(); system_delay_ms(10);} 
+            while(key_is_pressed(KEY_4)) { key_scanner(); system_delay_ms(10); }
             break;
         }
+
+        if(key_is_pressed(KEY_4))
+        {
+            hold_ms += 10; // 下面有 10ms 延时
+            if(hold_ms >= EXIT_MS)
+            {
+                ips200_show_string(0,160,"Exit 100% ");
+                // 等松开再退出，避免上层误触
+                while(key_is_pressed(KEY_4)) { key_scanner(); system_delay_ms(10); }
+                break;
+            }
+            // 每 100ms 刷新一次进度
+            if((hold_ms/100) != (last_progress_slot/100))
+            {
+                int pct = (int)((hold_ms * 100) / EXIT_MS); if(pct>99) pct=99; char pbuf[24];
+                snprintf(pbuf,sizeof(pbuf),"Exit %d%%", pct);
+                ips200_show_string(0,30,pbuf);
+                last_progress_slot = hold_ms;
+            }
+        }
+        else
+        {
+            if(hold_ms && hold_ms < EXIT_MS)
+            {
+                // 取消提示（用空格覆盖）
+                ips200_show_string(0,30,"           ");
+            }
+            hold_ms = 0; last_progress_slot = 0;
+        }
+
+        //system_delay_ms(10);
     }
     return 0;
 }
@@ -469,4 +534,3 @@ int menu_image_config(void)
 int menu_param_config(void){ return menu_pid_config(); }
 void param_flash_read(void){ pid_param_flash_read(); }
 void param_flash_write(void){ pid_param_flash_write(); }
-
